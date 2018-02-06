@@ -1,0 +1,4 @@
+pic32mx_io.c.o: pic32mx_io.c /opt/mcb32tools/include/pic32mx.h \
+ pic32mx_io.h
+pic32mx_io.c /opt/mcb32tools/include/pic32mx.h :
+ pic32mx_io.h :

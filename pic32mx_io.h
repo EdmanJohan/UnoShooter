@@ -2,8 +2,8 @@
 // Created by Johan on 06/02/2018.
 //
 
-#ifndef UNOCLIMBER_PIC32MX_IO_H
-#define UNOCLIMBER_PIC32MX_IO_H
+#ifndef PIC32MX_IO_H_
+#define PIC32MX_IO_H_
 
 #define CLR 0
 #define SET 1
