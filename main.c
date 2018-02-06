@@ -1,4 +1,4 @@
-#include "pic32mx_io.h"
+#include "include/pic32mx_io.h"
 #include </opt/mcb32tools/include/pic32mx.h>
 
 int main(void) {
