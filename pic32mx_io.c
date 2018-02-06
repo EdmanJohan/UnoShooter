@@ -1,9 +1,6 @@
 #include </opt/mcb32tools/include/pic32mx.h>
-#include <stdint.h>
 
-#define CLR 0
-#define SET 1
-#define INV 2
+#include "pic32mx_io.h"
 
 void en_led(int led, int state) {
   led -= 1;
