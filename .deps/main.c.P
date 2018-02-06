@@ -1,2 +1,0 @@
-main.c.o: main.c pic32mx_io.h /opt/mcb32tools/include/pic32mx.h
-main.c pic32mx_io.h /opt/mcb32tools/include/pic32mx.h :
