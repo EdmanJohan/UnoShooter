@@ -1,7 +1,7 @@
 #include </opt/mcb32tools/include/pic32mx.h>
 #include "include/pic32mx_io.h"
 
-void en_led(int led, int state) {
+void set_led(int led, int state) {
   led -= 1;
   switch (state) {
   case CLR:
@@ -16,7 +16,7 @@ void en_led(int led, int state) {
   }
 }
 
-void en_btn(int btn, int state) {
+void set_btn(int btn, int state) {
   int n = 3 + btn;
   if (btn == 1) {
     switch (state) {
@@ -45,7 +45,7 @@ void en_btn(int btn, int state) {
   }
 }
 
-void en_sw(int sw, int state) {
+void set_sw(int sw, int state) {
   int n = 7 + sw;
 
   switch (state) {
@@ -61,14 +61,14 @@ void en_sw(int sw, int state) {
   }
 }
 
-int led_set(int led) {
+int led_state(int led) {
   led -= 1;
   if (PORTE & (1 << led))
     return 1;
   return 0;
 }
 
-int sw_toggled(int sw) {
+int sw_state(int sw) {
   int n = 7 + sw;
 
   if (PORTD & (1 << n))
@@ -76,7 +76,7 @@ int sw_toggled(int sw) {
   return 0;
 }
 
-int btn_pressed(int btn) {
+int btn_state(int btn) {
   int n = 3 + btn;
   switch (btn) {
   case 1:
