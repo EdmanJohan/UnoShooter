@@ -27,14 +27,14 @@
 
 
 /* Forward declaration of ENABLE-functions for LEDs, Buttons and Switches */
-void en_led(int led, int state);
-void en_btn(int btn, int state);
-void en_sw(int sw, int state);
+void set_led(int led, int state);
+void set_btn(int btn, int state);
+void set_sw(int sw, int state);
 
 /* Froward declaration of STATE-functions for LEDs, Buttons and Switches */
-int led_set(int led);
-int sw_toggled(int sw);
-int btn_pressed(int btn);
+int led_state(int led);
+int sw_state(int sw);
+int btn_state(int btn);
 
 
 
