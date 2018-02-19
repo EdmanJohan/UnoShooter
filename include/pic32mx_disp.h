@@ -1,6 +1,4 @@
 #ifndef PIC32MX_DISP_H_
-#include "pic32mx.h"
-
 #define OLED_PAGE_MAX 4
 typedef unsigned char byte;
 

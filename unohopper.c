@@ -2,9 +2,7 @@
 #include "include/pic32mx_disp.h"
 #include "include/pic32mx_io.h"
 
-static const byte smiley[] = {0, 0, 0, 0, 0, 0, 0, 0,   0,   0,   0, 0, 0,
-                              0, 0, 0, 0, 0, 0, 0, 0,   0,   0,   0, 0, 0,
-                              0, 0, 0, 0, 0, 0, 8, 152, 128, 152, 88};
+static const byte smiley[] = {8, 152, 128, 152, 88};
 static const byte bg[] = {};
 
 byte disp[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -2,7 +2,6 @@
 #include "include/pic32mx.h"
 
 void set_led(int led, int state) {
-<<<<<<< HEAD
     led -= 1;
     switch (state) {
         case CLR:
@@ -31,35 +30,6 @@ void set_btn(int btn, int state) {
                 TRISFINV = 1 << 1;
                 break;
         }
-=======
-  led -= 1;
-  switch (state) {
-  case CLR:
-    PORTECLR = 1 << led;
-    break;
-  case SET:
-    PORTESET = 1 << led;
-    break;
-  case INV:
-    PORTEINV = 1 << led;
-    break;
-  }
-}
-
-void set_btn(int btn, int state) {
-  int n = 3 + btn;
-  if (btn == 1) {
-    switch (state) {
-    case CLR:
-      TRISFCLR = 1 << 1;
-      break;
-    case SET:
-      TRISFSET = 1 << 1;
-      break;
-    case INV:
-      TRISFINV = 1 << 1;
-      break;
->>>>>>> bd5f0948e047ea1b51fa6b1b598ec279580c75da
     }
 
     switch (state) {
@@ -76,11 +46,7 @@ void set_btn(int btn, int state) {
 }
 
 void set_sw(int sw, int state) {
-<<<<<<< HEAD
     int n = 7 + sw;
-=======
-  int n = 7 + sw;
->>>>>>> bd5f0948e047ea1b51fa6b1b598ec279580c75da
 
     switch (state) {
         case CLR:
@@ -95,7 +61,6 @@ void set_sw(int sw, int state) {
     }
 }
 
-<<<<<<< HEAD
 int get_led(int led) {
     led -= 1;
     if (PORTE & (1 << led)) return 1;
@@ -104,23 +69,11 @@ int get_led(int led) {
 
 int get_sw(int sw) {
     int n = 7 + sw;
-=======
-int led_state(int led) {
-  led -= 1;
-  if (PORTE & (1 << led))
-    return 1;
-  return 0;
-}
-
-int sw_state(int sw) {
-  int n = 7 + sw;
->>>>>>> bd5f0948e047ea1b51fa6b1b598ec279580c75da
 
     if (PORTD & (1 << n)) return 1;
     return 0;
 }
 
-<<<<<<< HEAD
 int get_btn(int btn) {
     int n = 3 + btn;
     switch (btn) {
@@ -134,21 +87,4 @@ int get_btn(int btn) {
             break;
     }
     return 0;
-=======
-int btn_state(int btn) {
-  int n = 3 + btn;
-  switch (btn) {
-  case 1:
-    if (PORTF & (1 << 1))
-      return 1;
-    break;
-  case 2:
-  case 3:
-  case 4:
-    if (PORTD & (1 << n))
-      return 1;
-    break;
-  }
-  return 0;
->>>>>>> bd5f0948e047ea1b51fa6b1b598ec279580c75da
 }
