@@ -1,12 +1,9 @@
 
 void _nmi_handler() {
-	for(;;);
+    for (;;)
+        ;
 }
 
-void _on_bootstrap() {
-	
-}
+void _on_bootstrap() {}
 
-void _on_reset() {
-	
-}
+void _on_reset() {}
