@@ -2,10 +2,19 @@
 #include "include/pic32mx_disp.h"
 
 #define OLED_PAGE_MAX 4
-typedef unsigned char byte;
+#define SET_DISPLAY_OFF 0xAE
+#define SET_CHARGE_PUMP_1 0x8D
+#define SET_CHARGE_PUMP_2 0x14
+#define SET_PRECHARGE_PERIOD_1 0xD9
+#define SET_PRECHARGE_PERIOD_2 0xF1
+#define SET_SEGMENT_REMAP 0xA1
+#define SET_COM_OUTPUT_SCAN_DIR 0xC8
+#define SET_COM_PINS_HW_CONFIG 0xDA
+#define SET_VCC 0x20
+#define SET_DISPLAY_ON 0xAF
 
 char textbuffer[4][16];
-
+static const byte bg[512];
 static const byte font[] = {
     0, 0,   0,   0,   0,   0,   0,  0, 0, 0,   0,   0,   0,   0,   0,  0,
     0, 0,   0,   0,   0,   0,   0,  0, 0, 0,   0,   0,   0,   0,   0,  0,
@@ -86,7 +95,7 @@ byte spi_put_byte(byte data) {
     return SPI2BUF;
 }
 
-void oled_host_init() {
+void host_init() {
     // SET PERIPHERAL BUS CLOCK
     OSCCONCLR = 1 < 19;
     OSCCONCLR = 1 < 20;
@@ -113,42 +122,49 @@ void oled_host_init() {
     SPI2CONSET = 1 << 15;  // ENABLE SPI
 }
 
-void oled_disp_init() {
+void oled_init() {
     PORTFCLR = 1 << 4;  // CLEAR DATA/CMD BIT
     sleep(100);
     PORTFCLR = 1 << 6;  // TURN VDD ON
     sleep(1000000);     // WAIT
 
-    spi_put_byte(0xAE);  // DISPLAY OFF COMMAND
+    spi_put_byte(SET_DISPLAY_OFF);
 
     PORTGCLR = 1 << 9;
     sleep(10);
     PORTGSET = 1 << 9;  // RESET THE RESET BIT
     sleep(10);
 
-    spi_put_byte(0x8D);
-    spi_put_byte(0x14);  // SET CHARGE PUMP/DC-DC COMMAND
+    spi_put_byte(SET_CHARGE_PUMP_1);
+    spi_put_byte(SET_CHARGE_PUMP_2);
 
-    spi_put_byte(0xD9);
-    spi_put_byte(0xF1);  // SET PRE-CHARGE PERIOD COMMAND
+    spi_put_byte(SET_PRECHARGE_PERIOD_1);
+    spi_put_byte(SET_PRECHARGE_PERIOD_2);
 
     PORTFCLR = 1 << 5;  // TURN VCC ON
     sleep(1000000);     // WAIT
 
     // COMMANDS TO INVERT DISPLAY. SETS DISPLAY ORIGIN TO UPPER LEFT CORNER
-    spi_put_byte(0xA1);  // REMAP COLUMNS
-    spi_put_byte(0xC8);  // SET COM OUTPUT SCAN DIRECTION
-    spi_put_byte(0xDA);  // SET COM PINS HARDWARE CONFIG
-    spi_put_byte(0x20);  // SEQUENTIAL COM, LEFT/RIGHT REMAP ENABLED
-    spi_put_byte(0xAF);  // DISPLAY ON COMMAND
+    spi_put_byte(SET_SEGMENT_REMAP);
+    spi_put_byte(SET_COM_OUTPUT_SCAN_DIR);
+    spi_put_byte(SET_COM_PINS_HW_CONFIG);
+    spi_put_byte(SET_VCC);
+    spi_put_byte(SET_DISPLAY_ON);
 }
 
 void init_display() {
-        oled_host_init();
-        oled_disp_init();
+    host_init();
+    oled_init();
 }
 
-void oled_update() {
+void clear_display() {
+    print_image(0, bg);
+    print_image(32, bg);
+    print_image(64, bg);
+    print_image(96, bg);
+}
+
+void update_display() {
     int x, y, c, k;
 
     for (x = 0; x < OLED_PAGE_MAX; x++) {
@@ -207,7 +223,6 @@ void print_image(int line, const byte *data) {
         for (j = 0; j < 32; j++) spi_put_byte(~data[i * 32 + j]);
     }
 }
-
 
 void remove_image(int line, const byte *data) {
     int i, j;
