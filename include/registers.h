@@ -23,8 +23,8 @@
  * arising out of or in connection with the use or performance of
  * this software.
  */
-#ifndef _IO_PIC32MX_H
-#define _IO_PIC32MX_H
+#ifndef _REGISTERS_H_
+#define _REGISTERS_H_
 
 /*--------------------------------------
  * Coprocessor 0 registers.
@@ -1581,4 +1581,4 @@
 #define PIC32_VECT_U6 50   /* UART6 */
 #define PIC32_VECT_U5 51   /* UART5 */
 
-#endif /* _IO_PIC32MX_H */
+#endif // _REGISTERS_H_

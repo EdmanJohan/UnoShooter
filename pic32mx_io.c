@@ -1,21 +1,39 @@
-#include "include/pic32mx_io.h"
-#include "include/pic32mx.h"
+#include "include/io.h"
+#include "include/registers.h"
 
+/**
+ * Sets state of LED light at specified position.
+ * Will also modify whether input/output.
+ *
+ * @param led   LED number, 1 ... 8
+ * @param state CLR, SET or INV
+ */
 void set_led(int led, int state) {
     led -= 1;
     switch (state) {
         case CLR:
+            TRISESET = 1 << led;
             PORTECLR = 1 << led;
             break;
         case SET:
+            TRISECLR = 1 << led;
             PORTESET = 1 << led;
             break;
         case INV:
+            if (PORTE & 1 << led)
+                TRISESET = 1 << led;
+            else
+                TRISECLR = 1 << led;
             PORTEINV = 1 << led;
             break;
     }
 }
 
+/**
+ * Sets state of button at specified position.
+ * @param btn   Button number, 1 ... 4
+ * @param state CLR, SET or INV
+ */
 void set_btn(int btn, int state) {
     int n = 3 + btn;
     if (btn == 1) {
@@ -45,6 +63,11 @@ void set_btn(int btn, int state) {
     }
 }
 
+/**
+ * Sets state of switch at specified position.
+ * @param led   Switch number, 1 ... 4
+ * @param state CLR, SET or INV
+ */
 void set_sw(int sw, int state) {
     int n = 7 + sw;
 
@@ -61,12 +84,22 @@ void set_sw(int sw, int state) {
     }
 }
 
+/**
+ * Returns the status of LED at specified position.
+ * @param led   LED number, 1 ... 8
+ * @return      1 if on, 0 if off.
+ */
 int get_led(int led) {
     led -= 1;
     if (PORTE & (1 << led)) return 1;
     return 0;
 }
 
+/**
+ * Returns the status of switch at specified position.
+ * @param led   Switch number, 1 ... 4
+ * @return      1 if on, 0 if off.
+ */
 int get_sw(int sw) {
     int n = 7 + sw;
 
@@ -74,6 +107,11 @@ int get_sw(int sw) {
     return 0;
 }
 
+/**
+ * Returns the status of button at specified position.
+ * @param led   Button number, 1 ... 4
+ * @return      1 if on, 0 if off.
+ */
 int get_btn(int btn) {
     int n = 3 + btn;
     switch (btn) {
