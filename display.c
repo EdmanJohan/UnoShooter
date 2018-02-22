@@ -131,42 +131,21 @@ void set_pixel(int x, int y) {
     buffer[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
 }
 
-void unset_pixel(int x, int y) {
-    int i = y / PIXEL_UNIT;
-    buffer[i * HEIGHT + x] &= 0 << (y - i * PIXEL_UNIT);
-}
+void add(Object o) { set_pixel(o.x, o.y); }
 
-/**
- * [set_object description]
- * @param o [description]
- * @param x [description]
- * @param y [description]
- */
-void add(struct Objects o) {
-    set_pixel(o.x, o.y);
-}
-
-void move(struct Objects o, int dir) {
+void move(Object* o, int dir) {
     switch (dir) {
         case RIGHT:
-            // unset_pixel(o.x, o.y);
-            o.x++;
-            set_pixel(o.x, o.y);
+            (*o).x++;
             break;
         case LEFT:
-            // unset_pixel(o.x, o.y);
-            o.x--;
-            set_pixel(o.x, o.y);
+            (*o).x--;
             break;
         case UP:
-            // unset_pixel(o.x, o.y);
-            o.y++;
-            set_pixel(o.x, o.y);
+            (*o).y++;
             break;
         case DOWN:
-            // unset_pixel(o.x, o.y);
-            o.y--;
-            set_pixel(o.x, o.y);
+            (*o).y--;
             break;
     }
 }

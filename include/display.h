@@ -2,7 +2,7 @@
 #define _DISPLAY_H_
 
 typedef unsigned char byte;
-typedef struct Objects { int x, y; } Object;
+typedef struct Object { int x, y; } Object;
 
 /**
  * Simple delay function. TO BE REPLACED!
@@ -28,7 +28,7 @@ void set_pixel(int x, int y);
  * @param x [description]
  * @param y [description]
  */
-void unset_pixel(int x, int y);
+// void unset_pixel(int x, int y);
 
 /**
  * Pushes the display[] array to the SPI buffer to be rendered on the display.
@@ -41,21 +41,15 @@ void render();
  * @param y    [description]
  * @param data [description]
  */
-void print(int x, int y, const char* data);
+void print(int x, int y, const char *data);
 
 /**
  * Fills the SPI buffer and the display[] array with 0s.
  */
 void clear();
 
-/**
- * [set_object description]
- * @param o [description]
- * @param x [description]
- * @param y [description]
- */
-void add(struct Objects o);
+void add(Object o);
 
-void move(struct Objects o, int dir);
+void move(Object* o, int dir);
 
 #endif  // _DISPLAY_H_
