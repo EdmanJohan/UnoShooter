@@ -2,7 +2,7 @@
 #define _DISPLAY_H_
 
 typedef unsigned char byte;
-typedef struct { int x, y; } Object;
+typedef struct Objects { int x, y; } Object;
 
 /**
  * Simple delay function. TO BE REPLACED!
@@ -16,7 +16,7 @@ void delay(int del);
 void init_display();
 
 /**
- * Enables a single pixel on the display at a specific location within the 
+ * Enables a single pixel on the display at a specific location within the
  * 128 x 32 resolution display.
  * @param x The x-value of the pixel.
  * @param y The y-value of the pixel.
@@ -54,8 +54,8 @@ void clear();
  * @param x [description]
  * @param y [description]
  */
-void add(Object o, int x, int y);
+void add(struct Objects o);
 
-void move(Object o, int dir);
+void move(struct Objects o, int dir);
 
-#endif // _DISPLAY_H_
+#endif  // _DISPLAY_H_

@@ -142,11 +142,11 @@ void unset_pixel(int x, int y) {
  * @param x [description]
  * @param y [description]
  */
-void add(Object o, int x, int y) {
+void add(struct Objects o) {
     set_pixel(o.x, o.y);
 }
 
-void move(Object o, int dir) {
+void move(struct Objects o, int dir) {
     switch (dir) {
         case RIGHT:
             // unset_pixel(o.x, o.y);

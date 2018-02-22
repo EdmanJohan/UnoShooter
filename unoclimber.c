@@ -3,6 +3,8 @@
 #include "include/io.h"
 #include "include/registers.h"
 
+#include <stdlib.h>
+
 #define RIGHT 0
 #define LEFT 1
 #define UP 2
@@ -21,11 +23,14 @@ int main(void) {
 
     init_display();
 
-    // int x = 0;
-    // int y = 0;
+    int x = 0;
+    int y = 0;
 
-    Object player;
-    add(player, 2, 2);
+    struct Objects player;
+    player.x = x;
+    player.y = y;
+
+    add(player);
 
     while (1) {
         if (get_sw(1)) clear();
@@ -36,6 +41,7 @@ int main(void) {
         if (get_btn(3)) move(player, UP);
         if (get_btn(4)) move(player, DOWN);
 
+        // set_pixel(x, y);
         // add(player, x, y);
 
         render();
