@@ -1,5 +1,5 @@
-#include "include/io.h"
-#include "include/registers.h"
+#include "io.h"
+#include "registers.h"
 
 /**
  * Sets state of LED light at specified position.

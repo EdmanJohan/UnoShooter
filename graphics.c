@@ -1,4 +1,4 @@
-#include "include/graphics.h"
+#include "graphics.h"
 
 // byte player[2][2];
 

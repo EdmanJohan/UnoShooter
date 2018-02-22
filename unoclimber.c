@@ -1,7 +1,8 @@
-#include "include/display.h"
-#include "include/graphics.h"
-#include "include/io.h"
-#include "include/registers.h"
+#include "display.h"
+#include "display_ui.h"
+#include "graphics.h"
+#include "io.h"
+#include "registers.h"
 
 #define RIGHT 0
 #define LEFT 1
@@ -21,37 +22,31 @@ int main(void) {
 
     init_display();
 
-    int x = 10;
-    int y = 10;
-
     Player p;
-    p.posX = x;
-    p.posY = y;
+    p.posX = 10;
+    p.posY = 10;
     p.size = 10;
 
     Rock r;
-    r.posX = x;
-    r.posY = y;
-    r.size = 5;
-
-    draw_borders();
+    r.posX = 120;
+    r.posY = 10;
+    r.size = 4;
 
     while (1) {
         if (get_sw(1)) clear();
-        // if (get_sw(2)) print(16, 16, "Hi!");
 
-        if (get_btn(1)) move_player(&p, RIGHT); 
-        if (get_btn(2)) move_player(&p, DOWN); 
-        if (get_btn(3)) move_player(&p, UP); 
-        if (get_btn(4)) move_player(&p, LEFT); 
-        
-        // if (get_btn(1)) move_rock(&r, RIGHT); 
-        // if (get_btn(2)) move_rock(&r, LEFT); 
-        // if (get_btn(3)) move_rock(&r, UP); 
-        // if (get_btn(4)) move_rock(&r, DOWN); 
+        move_rock(&r, LEFT);
+
+        // print(16, 16, "Hi!");
+
+        if (get_btn(1)) move_player(&p, RIGHT);
+        if (get_btn(2)) move_player(&p, DOWN);
+        if (get_btn(3)) move_player(&p, UP);
+        if (get_btn(4)) move_player(&p, LEFT);
 
         draw_player(p);
-        // draw_rock(r);
+        draw_rock(r);
+        draw_borders();
 
         render();
         delay(50000);
