@@ -1,7 +1,8 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
-#include "types.h"
+typedef unsigned char byte;
+typedef struct { int x, y; } Object;
 
 /**
  * Simple delay function. TO BE REPLACED!
@@ -21,6 +22,13 @@ void init_display();
  * @param y The y-value of the pixel.
  */
 void set_pixel(int x, int y);
+
+/**
+ * [unset_pixel description]
+ * @param x [description]
+ * @param y [description]
+ */
+void unset_pixel(int x, int y);
 
 /**
  * Pushes the display[] array to the SPI buffer to be rendered on the display.
@@ -46,6 +54,8 @@ void clear();
  * @param x [description]
  * @param y [description]
  */
-void set_object(Object o, int x, int y);
+void add(Object o, int x, int y);
+
+void move(Object o, int dir);
 
 #endif // _DISPLAY_H_

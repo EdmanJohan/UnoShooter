@@ -1,5 +1,5 @@
-#ifndef IO_H_
-#define IO_H_
+#ifndef _IO_H_
+#define _IO_H_
 
 #define CLR 0
 #define SET 1
@@ -49,4 +49,4 @@ int get_sw(int sw);
  */
 int get_btn(int btn);
 
-#endif  // IO_H_
+#endif  // _IO_H_
