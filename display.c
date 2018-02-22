@@ -112,7 +112,7 @@ void init_display() {
     PORTFCLR = 1 << 5;  // TURN VCC ON
     delay(1000000);     // WAIT
 
-    // COMMANDS TO INVERT DISPLAY. SETS DISPLAY ORIGIN TO UPPER LEFT CORNER
+    // COMMANDS TO FLIP DISPLAY. SETS DISPLAY ORIGIN TO UPPER LEFT CORNER
     spi_setbyte(SET_SEGMENT_REMAP);
     spi_setbyte(SET_COM_OUTPUT_SCAN_DIR);
     spi_setbyte(SET_COM_PINS_HW_CONFIG);
@@ -152,16 +152,16 @@ void move_player(Player* p, int dir) {
 
     switch (dir) {
         case RIGHT:
-            (*p).posX++;
+            if ((*p).posX + (*p).size < HEIGHT + 4) (*p).posX++;
             break;
         case LEFT:
-            (*p).posX--;
-            break;
-        case UP:
-            (*p).posY++;
+            if ((*p).posX > 0) (*p).posX--;
             break;
         case DOWN:
-            (*p).posY--;
+            if ((*p).posY + (*p).size < WIDTH + 3) (*p).posY++;
+            break;
+        case UP:
+            if ((*p).posY > 1) (*p).posY--;
             break;
     }
 
@@ -202,8 +202,16 @@ void print(int x, int y, const char* string) {
         for (j = 0; j < 8; i++) {
             if (string[i] & 0x80) continue;
             buffer[y * HEIGHT + x + PIXEL_UNIT * i] =
-                font[string[i] * PIXEL_UNIT + j];
+                ~font[string[i] * PIXEL_UNIT + j];
         }
+}
+
+void draw_borders() {
+    int i;
+    for (i = 0; i < HEIGHT; i++) {
+        set_pixel(i, 0);
+        set_pixel(i, WIDTH - 1);
+    }
 }
 
 /**
@@ -222,7 +230,7 @@ void render() {
 
         PORTFSET = 1 << 4;  // SET CMD/DATA
 
-        for (j = 0; j < HEIGHT; j++) spi_setbyte(~buffer[i * HEIGHT + j]);
+        for (j = 0; j < HEIGHT; j++) spi_setbyte(buffer[i * HEIGHT + j]);
     }
 }
 

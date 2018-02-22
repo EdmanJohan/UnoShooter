@@ -27,12 +27,14 @@ int main(void) {
     Player p;
     p.posX = x;
     p.posY = y;
-    p.size = 20;
+    p.size = 10;
 
     Rock r;
     r.posX = x;
     r.posY = y;
     r.size = 5;
+
+    draw_borders();
 
     while (1) {
         if (get_sw(1)) clear();

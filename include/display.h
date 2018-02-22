@@ -56,4 +56,6 @@ void move_player(Player* p, int dir);
 
 void move_rock(Rock* r, int dir);
 
+void draw_borders();
+
 #endif  // _DISPLAY_H_
