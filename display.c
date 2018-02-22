@@ -2,8 +2,6 @@
 #include "include/graphics.h"
 #include "include/registers.h"
 
-#include  "types.h"
-
 #define SET_DISPLAY_OFF 0xAE
 #define SET_CHARGE_PUMP_1 0x8D
 #define SET_CHARGE_PUMP_2 0x14
@@ -18,8 +16,11 @@
 
 #define SET 1
 #define CLR 0
+
 #define RIGHT 0
 #define LEFT 1
+#define UP 2
+#define DOWN 3
 
 #define PIXEL_UNIT 8
 #define HEIGHT 128
@@ -148,11 +149,25 @@ void add(Object o, int x, int y) {
 void move(Object o, int dir) {
     switch (dir) {
         case RIGHT:
-            unset_pixel(o.x, o.y);
-            set_pixel(o.x + 1, o.y);
+            // unset_pixel(o.x, o.y);
+            o.x++;
+            set_pixel(o.x, o.y);
+            break;
         case LEFT:
-            unset_pixel(o.x, o.y);
-            set_pixel(o.x - 1, o.y);
+            // unset_pixel(o.x, o.y);
+            o.x--;
+            set_pixel(o.x, o.y);
+            break;
+        case UP:
+            // unset_pixel(o.x, o.y);
+            o.y++;
+            set_pixel(o.x, o.y);
+            break;
+        case DOWN:
+            // unset_pixel(o.x, o.y);
+            o.y--;
+            set_pixel(o.x, o.y);
+            break;
     }
 }
 
