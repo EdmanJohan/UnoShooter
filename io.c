@@ -9,22 +9,21 @@
  * @param state CLR, SET or INV
  */
 void set_led(int led, int state) {
-    led -= 1;
     switch (state) {
         case CLR:
-            TRISESET = 1 << led;
-            PORTECLR = 1 << led;
+            TRISESET = 1 << (led - 1);
+            PORTECLR = 1 << (led - 1);
             break;
         case SET:
-            TRISECLR = 1 << led;
-            PORTESET = 1 << led;
+            TRISECLR = 1 << (led - 1);
+            PORTESET = 1 << (led - 1);
             break;
         case INV:
-            if (PORTE & 1 << led)
-                TRISESET = 1 << led;
+            if (PORTE & 1 << (led - 1))
+                TRISESET = 1 << (led - 1);
             else
-                TRISECLR = 1 << led;
-            PORTEINV = 1 << led;
+                TRISECLR = 1 << (led - 1);
+            PORTEINV = 1 << (led - 1);
             break;
     }
 }
@@ -35,7 +34,6 @@ void set_led(int led, int state) {
  * @param state CLR, SET or INV
  */
 void set_btn(int btn, int state) {
-    int n = 3 + btn;
     if (btn == 1) {
         switch (state) {
             case CLR:
@@ -52,13 +50,13 @@ void set_btn(int btn, int state) {
 
     switch (state) {
         case CLR:
-            TRISDCLR = 1 << n;
+            TRISDCLR = 1 << (btn + 3);
             break;
         case SET:
-            TRISDSET = 1 << n;
+            TRISDSET = 1 << (btn + 3);
             break;
         case INV:
-            TRISDINV = 1 << n;
+            TRISDINV = 1 << (btn + 3);
             break;
     }
 }
@@ -69,17 +67,15 @@ void set_btn(int btn, int state) {
  * @param state CLR, SET or INV
  */
 void set_sw(int sw, int state) {
-    int n = 7 + sw;
-
     switch (state) {
         case CLR:
-            PORTDCLR = 1 << n;
+            PORTDCLR = 1 << (sw + 7);
             break;
         case SET:
-            PORTDSET = 1 << n;
+            PORTDSET = 1 << (sw + 7);
             break;
         case INV:
-            PORTDINV = 1 << n;
+            PORTDINV = 1 << (sw + 7);
             break;
     }
 }
@@ -89,23 +85,14 @@ void set_sw(int sw, int state) {
  * @param led   LED number, 1 ... 8
  * @return      1 if on, 0 if off.
  */
-int get_led(int led) {
-    led -= 1;
-    if (PORTE & (1 << led)) return 1;
-    return 0;
-}
+int get_led(int led) { return PORTE & (1 << (led - 1)); }
 
 /**
  * Returns the status of switch at specified position.
  * @param led   Switch number, 1 ... 4
  * @return      1 if on, 0 if off.
  */
-int get_sw(int sw) {
-    int n = 7 + sw;
-
-    if (PORTD & (1 << n)) return 1;
-    return 0;
-}
+int get_sw(int sw) { return PORTD & (1 << (sw + 7)); }
 
 /**
  * Returns the status of button at specified position.
@@ -113,16 +100,8 @@ int get_sw(int sw) {
  * @return      1 if on, 0 if off.
  */
 int get_btn(int btn) {
-    int n = 3 + btn;
-    switch (btn) {
-        case 1:
-            if (PORTF & (1 << 1)) return 1;
-            break;
-        case 2:
-        case 3:
-        case 4:
-            if (PORTD & (1 << n)) return 1;
-            break;
-    }
-    return 0;
+    if (btn == 1)
+        return PORTF & (1 << 1);
+    else
+        return PORTD & (1 << (btn + 3));
 }

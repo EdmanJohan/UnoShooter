@@ -10,7 +10,7 @@ void delay(int del);
 /**
  * Initializes the SPI controller and the OLED display.
  */
-void display_init();
+void init_display();
 
 /**
  * Enables a single pixel on the display at a specific location within the 

@@ -1,6 +1,6 @@
-#include "include/registers.h"
-#include "include/graphics.h"
 #include "include/display.h"
+#include "include/graphics.h"
+#include "include/registers.h"
 
 #define SET_DISPLAY_OFF 0xAE
 #define SET_CHARGE_PUMP_1 0x8D
@@ -23,7 +23,7 @@
 #define PAGES 4
 #define TOTAL_PIXELS (HEIGHT * WIDTH / PIXEL_UNIT)
 
-byte display[TOTAL_PIXELS];
+byte buffer[TOTAL_PIXELS];
 
 /**
  * Simple delay function. TO BE REPLACED!
@@ -53,7 +53,7 @@ byte spi_setbyte(byte data) {
 /**
  * Initializes host SPI interface for the Basic I/O Shield.
  */
-void spi_init() {
+void init_spi() {
     // SET PERIPHERAL BUS CLOCK
     OSCCONCLR = 1 << 19;
     OSCCONCLR = 1 << 20;
@@ -81,10 +81,10 @@ void spi_init() {
 }
 
 /**
- * Initializes the SPI controller and the Basic I/O Shield OLED display.
+ * Initializes the SPI controller and the Basic I/O Shield OLED buffer.
  */
-void display_init() {
-    spi_init();
+void init_display() {
+    init_spi();
 
     PORTFCLR = 1 << 4;  // CLEAR DATA/CMD BIT
     delay(100);
@@ -116,18 +116,18 @@ void display_init() {
 }
 
 /**
- * Enables a single pixel on the display at a specific location within the
- * 128 x 32 resolution display.
+ * Enables a single pixel on the buffer at a specific location within the
+ * 128 x 32 resolution buffer.
  * @param x The x-value of the pixel.
  * @param y The y-value of the pixel.
  */
 void set_pixel(int x, int y) {
     int i = y / PIXEL_UNIT;
-    display[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
+    buffer[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
 }
 
 /**
- * Prints characters on the display. NON-FUNCTIONAL!
+ * Prints characters on the buffer. NON-FUNCTIONAL!
  * @param x    [description]
  * @param y    [description]
  * @param data [description]
@@ -135,16 +135,16 @@ void set_pixel(int x, int y) {
 void print(int x, int y, const char* string) {
     int i, j;
 
-    for (i = 0; i < sizeof(string); i++)
+    for (i = 0; i < 16; i++)
         for (j = 0; j < 8; i++) {
-            if (string[i] & (1 << 7)) continue;
-            display[y * HEIGHT + x + PIXEL_UNIT * i] =
-                font[string[i] * PIXEL_UNIT + i];
+            if (string[i] & 0x80) continue;
+            buffer[y * HEIGHT + x + PIXEL_UNIT * i] =
+                font[string[i] * PIXEL_UNIT + j];
         }
 }
 
 /**
- * Pushes the display[] array to the SPI buffer to be rendered on the display,
+ * Pushes the buffer[] array to the SPI buffer to be rendered on the buffer,
  * page by page.
  */
 void render() {
@@ -159,12 +159,12 @@ void render() {
 
         PORTFSET = 1 << 4;  // SET CMD/DATA
 
-        for (j = 0; j < HEIGHT; j++) spi_setbyte(~display[i * HEIGHT + j]);
+        for (j = 0; j < HEIGHT; j++) spi_setbyte(~buffer[i * HEIGHT + j]);
     }
 }
 
 /**
- * Fills the SPI buffer and the display[] array with 0s.
+ * Fills the SPI buffer with 0xFF and the buffer array with 0.
  */
 void clear() {
     int i, j;
@@ -180,5 +180,5 @@ void clear() {
         for (j = 0; j < HEIGHT; j++) spi_setbyte(CLEAR);
     }
 
-    for (i = 0; i < TOTAL_PIXELS; i++) display[i] = 0;
+    for (i = 0; i < TOTAL_PIXELS; i++) buffer[i] = 0;
 }

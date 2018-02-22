@@ -14,7 +14,7 @@ int main(void) {
 
     set_led(1, SET);
 
-    display_init();
+    init_display();
 
     int x = 0;
     int y = 0;
