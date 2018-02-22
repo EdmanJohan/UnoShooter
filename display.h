@@ -8,11 +8,31 @@
 #define TOTAL_PIXELS (HEIGHT * WIDTH / PIXEL_UNIT)
 
 typedef unsigned char byte;
-typedef struct Object { int posX, posY, size; } Object, Player, Rock;
 byte buffer[TOTAL_PIXELS];
 
 /**
- * Simple delay function. TO BE REPLACED!
+ * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
+ */
+void init_timer();
+
+/**
+ * Starts Timer2.
+ */
+void start_timer();
+
+/**
+ * Stops Timer2.
+ */
+void stop_timer();
+
+/** 
+ * Keeps the counter variable.
+ * @return 1 is counter is full, else 0.
+ */
+int next_frame();
+
+/**
+ * Simple delay function. 
  * @param del Number of cycles to "stall".
  */
 void delay(int del);

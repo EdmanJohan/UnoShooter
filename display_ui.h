@@ -17,6 +17,8 @@
 #define PAGES 4
 #define TOTAL_PIXELS (HEIGHT * WIDTH / PIXEL_UNIT)
 
+typedef struct Object { int posX, posY, size, velocity; } Object, Player, Rock;
+
 /**
  * Enables a single pixel on the buffer at a specific location within the
  * 128 x 32 resolution buffer.
@@ -25,21 +27,13 @@
  */
 void set_pixel(int x, int y);
 
-
 void unset_pixel(int x, int y);
 
+void draw(Object o);
 
-void draw_player(Player p);
+void move(Object* o, int dir);
 
-
-void move_player(Player* p, int dir);
-
-
-void draw_rock(Rock r);
-
-
-void move_rock(Rock* r, int dir);
-
+void drop(Rock* r);
 
 void draw_borders();
 

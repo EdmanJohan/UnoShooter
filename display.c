@@ -12,7 +12,9 @@
 #define SET_COM_PINS_HW_CONFIG 0xDA
 #define SET_VCC 0x20
 #define SET_DISPLAY_ON 0xAF
-#define CLEAR 0xFF
+#define CLEAR 0x00
+
+static int counter = 0;
 
 /**
  * Simple delay function. TO BE REPLACED!
@@ -22,6 +24,45 @@ void delay(int del) {
     int i;
     for (i = 0; i < del; i++)
         ;
+}
+
+/**
+ * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
+ */
+void init_timer() {
+    T2CON = 0x0;  // STOP TIMER & CLEAR CONTROL REGISTERS
+    PR2 = 0x100;  // PERIOD INITALIZED TO 31250, 0x7A12
+
+    IPCSET(2) = 0xD;    // SET INTERRUPT PRIORITY 3-1
+    IECSET(0) = 0x900;  // ENABLE INTERRUPTS
+
+    T2CONSET = 0x70;  // 1:256 PRESCALE
+    TMR2 = 0x0;       // CLEAR TIMER REGISTER
+}
+
+/**
+ * Starts Timer2.
+ */
+void start_timer() { T2CONSET = 0x8000; }
+
+/**
+ * Stops Timer2.
+ */
+void stop_timer() { T2CONCLR = 0x8000; }
+
+int next_frame() {
+    if (counter > 10) {
+        counter = 0;
+        return 1;
+    }
+
+    if (IFS(0) & 0x100) {
+        counter++;
+        IFSCLR(0) = 0x100;  // CLEAR TIMER INTERRUPT STATUS FLAG
+        return 0;
+    }
+
+    return 0;
 }
 
 /**
@@ -113,12 +154,11 @@ void init_display() {
 void print(int x, int y, const char* string) {
     int i, j;
 
-    for (i = 0; i < 16; i++)
-        for (j = 0; j < 8; i++) {
-            if (string[i] & 0x80) continue;
-            buffer[y * HEIGHT + x + PIXEL_UNIT * i] =
-                font[string[i] * PIXEL_UNIT + j];
+    for (i = 0; i < sizeof(string) / sizeof(char); i++) {
+        for (j = 0; j < PIXEL_UNIT; j++) {
+            buffer[y * 128 + x + i * PIXEL_UNIT + j] = font[string[i] * PIXEL_UNIT + j];
         }
+    }
 }
 
 /**

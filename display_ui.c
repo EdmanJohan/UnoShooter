@@ -1,8 +1,5 @@
 #include "display_ui.h"
 
-#define SET 1
-#define CLR 0
-
 #define RIGHT 0
 #define LEFT 1
 #define UP 2
@@ -24,57 +21,52 @@ void unset_pixel(int x, int y) {
     buffer[i * HEIGHT + x] &= ~(1 << (y - i * PIXEL_UNIT));
 }
 
-void draw_player(Player p) {
+void draw(Object o) {
     int i, j;
 
-    for (i = 0; i <= p.size / 2; i++)
-        for (j = 0; j <= p.size / 2; j++) set_pixel(i + p.posX, j + p.posY);
+    for (i = 0; i <= o.size / 2; i++)
+        for (j = 0; j <= o.size / 2; j++) set_pixel(i + o.posX, j + o.posY);
 }
 
-void move_player(Player* p, int dir) {
+void move(Object* o, int dir) {
     int i, j;
 
-    for (i = 0; i <= (*p).size / 2; i++)
-        for (j = 0; j <= (*p).size / 2; j++)
-            unset_pixel(i + (*p).posX, j + (*p).posY);
+    for (i = 0; i <= (*o).size / 2; i++)
+        for (j = 0; j <= (*o).size / 2; j++)
+            unset_pixel(i + (*o).posX, j + (*o).posY);
 
     switch (dir) {
-        case RIGHT:
-            if ((*p).posX + (*p).size < HEIGHT + 4) (*p).posX++;
-            break;
         case LEFT:
-            if ((*p).posX > 10) (*p).posX--;
+            if ((*o).posY + (*o).size < WIDTH + 3) (*o).posY += (*o).velocity;
             break;
-        case DOWN:
-            if ((*p).posY + (*p).size < WIDTH + 3) (*p).posY++;
+        case RIGHT:
+            if ((*o).posY > 1) (*o).posY -= (*o).velocity;
             break;
         case UP:
-            if ((*p).posY > 1) (*p).posY--;
+            if ((*o).posX + (*o).size < HEIGHT + 4) (*o).posX += (*o).velocity;
+            break;
+        case DOWN:
+            if ((*o).posX > 10) (*o).posX -= (*o).velocity;
             break;
     }
 
-    for (i = (*p).posX; i < (*p).size; i++)
-        for (j = (*p).posY; j < (*p).size; j++) set_pixel(i, j);
+    for (i = (*o).posX; i < (*o).size; i++)
+        for (j = (*o).posY; j < (*o).size; j++) set_pixel(i, j);
 }
 
-void draw_rock(Rock r) { set_pixel(r.posX, r.posY); }
+void drop(Rock* r) {
+    int i, j;
 
-void move_rock(Rock* r, int dir) {
-    unset_pixel((*r).posX, (*r).posY);
-    switch (dir) {
-        case RIGHT:
-            (*r).posX++;
-            break;
-        case LEFT:
-            (*r).posX--;
-            break;
-        case UP:
-            (*r).posY++;
-            break;
-        case DOWN:
-            (*r).posY--;
-            break;
-    }
+    for (i = 0; i <= (*r).size / 2; i++)
+        for (j = 0; j <= (*r).size / 2; j++)
+            unset_pixel(i + (*r).posX, j + (*r).posY);
+
+    (*r).posX -= (*r).velocity;
+
+    for (i = (*r).posX; i < (*r).size; i++)
+        for (j = (*r).posY; j < (*r).size; j++) set_pixel(i, j);
+
+    draw(*r);
 }
 
 void draw_borders() {
