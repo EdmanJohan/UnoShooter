@@ -24,22 +24,33 @@ int main(void) {
     int x = 10;
     int y = 10;
 
-    Object obj;
-    obj.x = x;
-    obj.y = y;
+    Player p;
+    p.posX = x;
+    p.posY = y;
+    p.size = 20;
 
-    add(obj);
+    Rock r;
+    r.posX = x;
+    r.posY = y;
+    r.size = 5;
 
     while (1) {
         if (get_sw(1)) clear();
         // if (get_sw(2)) print(16, 16, "Hi!");
 
-        if (get_btn(1)) move(&obj, RIGHT); 
-        if (get_btn(2)) move(&obj, LEFT); 
-        if (get_btn(3)) move(&obj, UP); 
-        if (get_btn(4)) move(&obj, DOWN); 
+        if (get_btn(1)) move_player(&p, RIGHT); 
+        if (get_btn(2)) move_player(&p, DOWN); 
+        if (get_btn(3)) move_player(&p, UP); 
+        if (get_btn(4)) move_player(&p, LEFT); 
+        
+        // if (get_btn(1)) move_rock(&r, RIGHT); 
+        // if (get_btn(2)) move_rock(&r, LEFT); 
+        // if (get_btn(3)) move_rock(&r, UP); 
+        // if (get_btn(4)) move_rock(&r, DOWN); 
 
-        add(obj);
+        draw_player(p);
+        // draw_rock(r);
+
         render();
         delay(50000);
     }

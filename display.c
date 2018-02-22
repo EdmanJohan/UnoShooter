@@ -131,21 +131,60 @@ void set_pixel(int x, int y) {
     buffer[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
 }
 
-void add(Object o) { set_pixel(o.x, o.y); }
+void unset_pixel(int x, int y) {
+    int i = y / PIXEL_UNIT;
+    buffer[i * HEIGHT + x] &= ~(1 << (y - i * PIXEL_UNIT));
+}
 
-void move(Object* o, int dir) {
+void draw_player(Player p) {
+    int i, j;
+
+    for (i = 0; i <= p.size / 2; i++)
+        for (j = 0; j <= p.size / 2; j++) set_pixel(i + p.posX, j + p.posY);
+}
+
+void move_player(Player* p, int dir) {
+    int i, j;
+
+    for (i = 0; i <= (*p).size / 2; i++)
+        for (j = 0; j <= (*p).size / 2; j++)
+            unset_pixel(i + (*p).posX, j + (*p).posY);
+
     switch (dir) {
         case RIGHT:
-            (*o).x++;
+            (*p).posX++;
             break;
         case LEFT:
-            (*o).x--;
+            (*p).posX--;
             break;
         case UP:
-            (*o).y++;
+            (*p).posY++;
             break;
         case DOWN:
-            (*o).y--;
+            (*p).posY--;
+            break;
+    }
+
+    for (i = (*p).posX; i < (*p).size; i++)
+        for (j = (*p).posY; j < (*p).size; j++) set_pixel(i, j);
+}
+
+void draw_rock(Rock r) { set_pixel(r.posX, r.posY); }
+
+void move_rock(Rock* r, int dir) {
+    unset_pixel((*r).posX, (*r).posY);
+    switch (dir) {
+        case RIGHT:
+            (*r).posX++;
+            break;
+        case LEFT:
+            (*r).posX--;
+            break;
+        case UP:
+            (*r).posY++;
+            break;
+        case DOWN:
+            (*r).posY--;
             break;
     }
 }

@@ -2,7 +2,7 @@
 #define _DISPLAY_H_
 
 typedef unsigned char byte;
-typedef struct Object { int x, y; } Object;
+typedef struct Object { int posX, posY, size; } Object, Player, Rock;
 
 /**
  * Simple delay function. TO BE REPLACED!
@@ -48,8 +48,12 @@ void print(int x, int y, const char *data);
  */
 void clear();
 
-void add(Object o);
+void draw_player(Player p);
 
-void move(Object* o, int dir);
+void draw_rock(Rock r);
+
+void move_player(Player* p, int dir);
+
+void move_rock(Rock* r, int dir);
 
 #endif  // _DISPLAY_H_

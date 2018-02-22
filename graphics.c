@@ -1,6 +1,6 @@
 #include "include/graphics.h"
 
-byte smiley[] = {0x58, 0x98, 0x80, 0x98, 0x58};
+// byte player[2][2];
 
 byte font[] = {
     0, 0,   0,   0,   0,   0,   0,  0, 0, 0,   0,   0,   0,   0,   0,  0,

@@ -3,7 +3,7 @@
 
 typedef unsigned char byte;
 
-extern byte smiley[];
+extern byte player[];
 extern byte font[];
 
 #endif // _GRAPHICS_H_
