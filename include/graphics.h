@@ -1,7 +1,7 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-typedef unsigned char byte;
+#include "types.h"
 
 extern byte smiley[];
 extern byte font[];

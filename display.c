@@ -2,6 +2,8 @@
 #include "include/graphics.h"
 #include "include/registers.h"
 
+#include  "types.h"
+
 #define SET_DISPLAY_OFF 0xAE
 #define SET_CHARGE_PUMP_1 0x8D
 #define SET_CHARGE_PUMP_2 0x14
@@ -16,6 +18,8 @@
 
 #define SET 1
 #define CLR 0
+#define RIGHT 0
+#define LEFT 1
 
 #define PIXEL_UNIT 8
 #define HEIGHT 128
@@ -124,6 +128,32 @@ void init_display() {
 void set_pixel(int x, int y) {
     int i = y / PIXEL_UNIT;
     buffer[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
+}
+
+void unset_pixel(int x, int y) {
+    int i = y / PIXEL_UNIT;
+    buffer[i * HEIGHT + x] &= 0 << (y - i * PIXEL_UNIT);
+}
+
+/**
+ * [set_object description]
+ * @param o [description]
+ * @param x [description]
+ * @param y [description]
+ */
+void add(Object o, int x, int y) {
+    set_pixel(o.x, o.y);
+}
+
+void move(Object o, int dir) {
+    switch (dir) {
+        case RIGHT:
+            unset_pixel(o.x, o.y);
+            set_pixel(o.x + 1, o.y);
+        case LEFT:
+            unset_pixel(o.x, o.y);
+            set_pixel(o.x - 1, o.y);
+    }
 }
 
 /**

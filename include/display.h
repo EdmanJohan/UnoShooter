@@ -1,6 +1,8 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
+#include "types.h"
+
 /**
  * Simple delay function. TO BE REPLACED!
  * @param del Number of cycles to "stall".
@@ -37,5 +39,13 @@ void print(int x, int y, const char* data);
  * Fills the SPI buffer and the display[] array with 0s.
  */
 void clear();
+
+/**
+ * [set_object description]
+ * @param o [description]
+ * @param x [description]
+ * @param y [description]
+ */
+void set_object(Object o, int x, int y);
 
 #endif // _DISPLAY_H_
