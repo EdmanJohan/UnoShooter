@@ -4,6 +4,9 @@
 #include "io.h"
 #include "registers.h"
 
+#include <stdlib.h>
+#include "standard.h"
+
 #define RIGHT 0
 #define LEFT 1
 #define UP 2
@@ -26,20 +29,14 @@ int main(void) {
     Rock r_1;
     r_1.posX = 115;
     r_1.posY = 10;
-    r_1.size = 10;
+    r_1.size = rand() % 10;
     r_1.velocity = 1;
 
-    // Rock r_2;
-    // r_2.posX = 100;
-    // r_2.posY = 20;
-    // r_2.size = 6;
-    // r_2.velocity = 1;
-
-    // Rock r_3;
-    // r_3.posX = 120;
-    // r_3.posY = 29;
-    // r_3.size = 8;
-    // r_3.velocity = 2;
+    Rock r_2;
+    r_2.posX = 110;
+    r_2.posY = 10;
+    r_2.size = rand() % 20;
+    r_2.velocity = 1;
 
     Player p;
     p.posX = 10;
@@ -54,8 +51,8 @@ int main(void) {
 
         if (next_frame()) {
             if (TMR2 % 10) drop(&r_1);
-            // if (TMR2 % 40) drop(&r_2);
-            //
+            if (TMR2 % 20) drop(&r_2);
+
             if (get_btn(1)) move(&p, UP);
             if (get_btn(2)) move(&p, LEFT);
             if (get_btn(3)) move(&p, RIGHT);
@@ -63,15 +60,10 @@ int main(void) {
 
             draw(p);
             draw_borders();
-            render();
 
-            if (p.posX == r_1.posX && p.posY == r_1.posY) {
-                print(0, 1, "You");
-                print(28, 1, "lost");
-                print(60, 1, "!");
-                render();
-                stop_timer();
-            }
+            if (p.posX == r_1.posX && p.posY == r_1.posY) game_over();
+
+            render();
         }
     }
 

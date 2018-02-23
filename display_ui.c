@@ -76,3 +76,10 @@ void draw_borders() {
         set_pixel(i, WIDTH - 1);
     }
 }
+
+void game_over() {
+    print(0, 1, "You");
+    print(28, 1, "lost");
+    print(60, 1, "!");
+    stop_timer();
+}
