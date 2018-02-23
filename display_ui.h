@@ -2,6 +2,7 @@
 #define _DISPLAY_UI_H_
 
 #include "display.h"
+#include "objects.h"
 
 #define SET 1
 #define CLR 0
@@ -17,7 +18,7 @@
 #define PAGES 4
 #define TOTAL_PIXELS (HEIGHT * WIDTH / PIXEL_UNIT)
 
-typedef struct Object { int posX, posY, size, velocity; } Object, Player, Rock;
+//typedef struct Object { int posX, posY, size, velocity; } Object, Player, Rock;
 
 /**
  * Enables a single pixel on the buffer at a specific location within the
