@@ -37,4 +37,6 @@ void drop(Rock* r);
 
 void draw_borders();
 
+void game_over();
+
 #endif // _DISPLAY_UI_H_
