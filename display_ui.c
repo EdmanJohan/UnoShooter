@@ -55,21 +55,6 @@ void move(Object* o, int dir) {
                 for (j = o->posY; j < o->size; j++) set_pixel(i, j);
 }
 
-void drop(Rock *r) {
-        int i, j;
-
-        for (i = 0; i <= r->size / 2; i++)
-                for (j = 0; j <= r->size / 2; j++)
-                        unset_pixel(i + r->posX, j + r->posY);
-
-        r->posX -= r->velocity;
-
-        for (i = r->posX; i < r->size; i++)
-                for (j = r->posY; j < r->size; j++) set_pixel(i, j);
-
-        draw(*r);
-}
-
 void draw_borders() {
         int i;
         for (i = 0; i < HEIGHT; i++) {

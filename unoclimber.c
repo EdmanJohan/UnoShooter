@@ -56,9 +56,9 @@ void game_draw(void) {
 
                 // drop(&r);
 
-
+                rock_update(&r);
                 rock_show(&r);
-                //rock_update(&r);
+
 
                 game_movement(&p);
                 draw(p);
