@@ -6,9 +6,8 @@
 #define INV 2
 
 
-void set_an(int state);
+void init_analog();
 
-unsigned int get_an();
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.
