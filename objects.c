@@ -1,7 +1,8 @@
 #include "objects.h"
-#include "standard.h"
+// #include "standard.h"
 #include "display_ui.h"
-
+#include <stdlib.h>
+#include "registers.h"
 
 
 //Only rectangle size for now
@@ -14,10 +15,11 @@ void player_new(Object *p, int posX, int posY, int size) {
 }
 
 void rock_new(Object *r) {
-        r->posX = 100; //randint(120, 125);
-        r->posY = randint(5, 25);
-        r->velocity = randint(1, 3);
-        r->size = randint(3,7);
+        srand((unsigned int)12322222221);
+        r->posX = rand() % 20 + 80;
+        r->posY = rand() % 20 + 5;
+        r->velocity = rand() % 2 + 1;
+        r->size = rand() % 5 + 5;
         r->draw = 1;
 }
 

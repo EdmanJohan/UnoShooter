@@ -16,11 +16,10 @@
 Player p;
 Rock r;
 
-// Rock rocks[5];
+Rock rocks[5];
 // Rock pebbles[10];
 
 void game_preload() {
-    init_analog();
     set_btn(1, SET);
     set_btn(2, SET);
     set_btn(3, SET);
@@ -29,46 +28,38 @@ void game_preload() {
     set_sw(1, SET);
     set_sw(2, SET);
 
-    set_led(1, SET);
-
+    init_analog();
     init_display();
     init_timer();
-
 }
 
 void game_setup(void) {
     player_new(&p, 10, 10, 10);
-    rock_new(&r);
+
+    int i;
+    for (i = 0; i < 5; i++) rock_new(&rocks[i]);
+
     start_timer();
 }
 
 void game_movement(Object* o) {
-    AD1CON1SET |= 1 << 1;
-    while (!(AD1CON1 & (1 << 1)))
-        ;
-    while (!(AD1CON1 & 1))
-        ;
-
-    if (ADC1BUF0 > 582) 
-        move(o, UP);
-    if (ADC1BUF0 < 472) 
-        move(o, DOWN);
+    AD1CON1SET = 0x2;
+    potentio_move(o);
 
     if (get_btn(4)) move(o, RIGHT);
-    if (get_btn(3)) move(o, LET);
+    if (get_btn(3)) move(o, LEFT);
 }
 
 void game_draw(void) {
+    int k = 0;
     if (get_sw(1)) clear();
 
     if (next_frame()) {
         draw_borders();
-        // if (TMR2 % 10) drop(&r);
+        if (TMR2 % 20) k++;
 
-        // drop(&r);
-
-        rock_update(&r);
-        rock_show(&r);
+        rock_update(&rocks[k]);
+        rock_show(&rocks[k]);
 
         game_movement(&p);
         draw(p);

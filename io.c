@@ -2,8 +2,8 @@
 #include "registers.h"
 
 void init_analog() { 
-        AD1PCFG = ~0x1100; 
-        TRISBSET = 0x1100;
+        AD1PCFG = ~(1 << 2 || 1 << 10); 
+        TRISBSET = 1 << 2 || 1 << 10;
 
         /* Use pin 2 for positive */
         AD1CHS = 1 << 17;

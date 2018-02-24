@@ -32,6 +32,8 @@ void unset_pixel(int x, int y);
 
 void draw(Object o);
 
+void potentio_move(Object* o);
+
 void move(Object* o, int dir);
 
 void drop(Rock* r);
