@@ -16,7 +16,7 @@
 Player p;
 Rock r;
 
-Rock rocks[5];
+//Rock rocks[5];
 //Rock pebbles[10];
 
 void game_preload() {
@@ -36,14 +36,8 @@ void game_preload() {
 
 void game_setup(void) {
         player_new(&p, 10, 10, 10);
-        int i;
-        for(i = 0; i < 10; i++)
-                rock_new(&rocks[i]);
-
-        //rock_new(&r);
+        rock_new(&r);
         start_timer();
-
-
 }
 
 void game_movement(Object* o) {
@@ -61,9 +55,10 @@ void game_draw(void) {
                 //if (TMR2 % 10) drop(&r);
 
                 // drop(&r);
-                int i;
-                for (i = 0; i < 10; i++)
-                        draw(rocks[i]);
+
+
+                rock_show(&r);
+                //rock_update(&r);
 
                 game_movement(&p);
                 draw(p);
@@ -77,7 +72,8 @@ int main(void) {
         game_preload();
         game_setup();
 
-        while (1) game_draw();
+        while (1)
+                game_draw();
 
         return 0;
 }

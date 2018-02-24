@@ -2,16 +2,10 @@
 
 
 int randint(int min, int max) {
-        if ((max - 1) == RAND_MAX)
-                return rand();
-        else {
-                long end = RAND_MAX / max;
-                end *= max;
+        int r = rand() % max;
 
+        if(r < min)
+                r += min;
 
-                int r;
-                while((r = rand() >= end));
-
-                return min + (r % max);
-        }
+        return r;
 }
