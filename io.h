@@ -5,6 +5,10 @@
 #define SET 1
 #define INV 2
 
+
+void set_an(int state);
+
+unsigned int get_an();
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.
@@ -48,5 +52,7 @@ int get_sw(int sw);
  * @return  	1 if on, 0 if off.
  */
 int get_btn(int btn);
+
+
 
 #endif  // _IO_H_

@@ -20,6 +20,7 @@ Rock r;
 //Rock pebbles[10];
 
 void game_preload() {
+        set_an(SET);
         set_btn(1, SET);
         set_btn(2, SET);
         set_btn(3, SET);

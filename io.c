@@ -1,6 +1,23 @@
 #include "io.h"
 #include "registers.h"
 
+
+void set_an(int state) {
+        switch (state) {
+        case CLR:
+                TRISGCLR = 1;
+                PORTGSET = 1;
+                break;
+        case SET:
+                TRISGSET = 1;
+                PORTGSET = 1;
+                break;
+        }
+}
+
+unsigned int get_an() {
+        return PORTG & 0x1;
+}
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.
@@ -9,23 +26,23 @@
  * @param state CLR, SET or INV
  */
 void set_led(int led, int state) {
-    switch (state) {
+        switch (state) {
         case CLR:
-            TRISESET = 1 << (led - 1);
-            PORTECLR = 1 << (led - 1);
-            break;
-        case SET:
-            TRISECLR = 1 << (led - 1);
-            PORTESET = 1 << (led - 1);
-            break;
-        case INV:
-            if (PORTE & 1 << (led - 1))
                 TRISESET = 1 << (led - 1);
-            else
+                PORTECLR = 1 << (led - 1);
+                break;
+        case SET:
                 TRISECLR = 1 << (led - 1);
-            PORTEINV = 1 << (led - 1);
-            break;
-    }
+                PORTESET = 1 << (led - 1);
+                break;
+        case INV:
+                if (PORTE & 1 << (led - 1))
+                        TRISESET = 1 << (led - 1);
+                else
+                        TRISECLR = 1 << (led - 1);
+                PORTEINV = 1 << (led - 1);
+                break;
+        }
 }
 
 /**
@@ -34,31 +51,31 @@ void set_led(int led, int state) {
  * @param state CLR, SET or INV
  */
 void set_btn(int btn, int state) {
-    if (btn == 1) {
+        if (btn == 1) {
+                switch (state) {
+                case CLR:
+                        TRISFCLR = 1 << 1;
+                        break;
+                case SET:
+                        TRISFSET = 1 << 1;
+                        break;
+                case INV:
+                        TRISFINV = 1 << 1;
+                        break;
+                }
+        }
+
         switch (state) {
-            case CLR:
-                TRISFCLR = 1 << 1;
+        case CLR:
+                TRISDCLR = 1 << (btn + 3);
                 break;
-            case SET:
-                TRISFSET = 1 << 1;
+        case SET:
+                TRISDSET = 1 << (btn + 3);
                 break;
-            case INV:
-                TRISFINV = 1 << 1;
+        case INV:
+                TRISDINV = 1 << (btn + 3);
                 break;
         }
-    }
-
-    switch (state) {
-        case CLR:
-            TRISDCLR = 1 << (btn + 3);
-            break;
-        case SET:
-            TRISDSET = 1 << (btn + 3);
-            break;
-        case INV:
-            TRISDINV = 1 << (btn + 3);
-            break;
-    }
 }
 
 /**
@@ -67,17 +84,17 @@ void set_btn(int btn, int state) {
  * @param state CLR, SET or INV
  */
 void set_sw(int sw, int state) {
-    switch (state) {
+        switch (state) {
         case CLR:
-            PORTDCLR = 1 << (sw + 7);
-            break;
+                PORTDCLR = 1 << (sw + 7);
+                break;
         case SET:
-            PORTDSET = 1 << (sw + 7);
-            break;
+                PORTDSET = 1 << (sw + 7);
+                break;
         case INV:
-            PORTDINV = 1 << (sw + 7);
-            break;
-    }
+                PORTDINV = 1 << (sw + 7);
+                break;
+        }
 }
 
 /**
@@ -85,14 +102,18 @@ void set_sw(int sw, int state) {
  * @param led   LED number, 1 ... 8
  * @return      1 if on, 0 if off.
  */
-int get_led(int led) { return PORTE & (1 << (led - 1)); }
+int get_led(int led) {
+        return PORTE & (1 << (led - 1));
+}
 
 /**
  * Returns the status of switch at specified position.
  * @param led   Switch number, 1 ... 4
  * @return      1 if on, 0 if off.
  */
-int get_sw(int sw) { return PORTD & (1 << (sw + 7)); }
+int get_sw(int sw) {
+        return PORTD & (1 << (sw + 7));
+}
 
 /**
  * Returns the status of button at specified position.
@@ -100,8 +121,8 @@ int get_sw(int sw) { return PORTD & (1 << (sw + 7)); }
  * @return      1 if on, 0 if off.
  */
 int get_btn(int btn) {
-    if (btn == 1)
-        return PORTF & (1 << 1);
-    else
-        return PORTD & (1 << (btn + 3));
+        if (btn == 1)
+                return PORTF & (1 << 1);
+        else
+                return PORTD & (1 << (btn + 3));
 }

@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include "registers.h"
+#include "io.h"
 
 
 int randint(int min, int max) {
-        srand((unsigned) TMR2);
+        srand((unsigned) get_an());
         int r = rand() % max;
 
         if(r < min)
