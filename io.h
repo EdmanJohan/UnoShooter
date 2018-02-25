@@ -6,7 +6,7 @@
 #define INV 2
 
 
-void init_analog();
+void init_pin();
 
 /**
  * Sets state of LED light at specified position.

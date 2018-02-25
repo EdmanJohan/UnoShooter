@@ -2,7 +2,7 @@
 DEVICE		= 32MX320F128H
 
 # UART settings for programmer
-TTYDEV		?=/dev/ttyS3
+TTYDEV		?=/dev/ttyS2
 TTYBAUD		?=115200
 
 # Name of the project
@@ -21,7 +21,7 @@ ELFFILE		= $(PROGNAME).elf
 HEXFILE		= $(PROGNAME).hex
 
 # Find all source files automatically
-CFILES      = $(wildcard *.c)
+CFILES    = $(wildcard *.c)
 ASFILES		= $(wildcard *.S)
 SYMSFILES	= $(wildcard *.syms)
 

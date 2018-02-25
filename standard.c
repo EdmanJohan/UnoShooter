@@ -3,14 +3,25 @@
 #include "registers.h"
 
 int randint(int min, int max) {
-    unsigned int seed = max + min;
-    seed ^= ADC1BUF0 + ADC1BUF1 + ADC1BUF2 + ADC1BUF3 + ADC1BUF4 + ADC1BUF5 +
-            ADC1BUF6 + ADC1BUF7 + ADC1BUF8 + ADC1BUF9 + ADC1BUFA + ADC1BUFB +
-            ADC1BUFC + ADC1BUFD + ADC1BUFE + ADC1BUFF;
-    srand((unsigned) seed);
-    int r = rand() % max;
+        int r = rand() % (max + 1);
 
-    if (r < min) r += min;
+        if (r < min) r += min;
+        return r;
+}
 
-    return r;
+unsigned int seed() {
+        int n = 8;
+        unsigned int seed = n;
+        for (; n > 0; n--) {
+                /* Start sampling, wait until conversion is done */
+                AD1CON1 |= (0x1 << 1);
+                while (!(AD1CON1 & (0x1 << 1)));
+                while (!(AD1CON1 & 0x1));
+
+                /* Get the analog value */
+                seed ^= ADC1BUF0;
+
+        }
+        return seed;
+
 }

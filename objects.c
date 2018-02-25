@@ -15,11 +15,10 @@ void player_new(Object *p, int posX, int posY, int size) {
 }
 
 void rock_new(Object *r) {
-        srand((unsigned int)12322222221);
-        r->posX = rand() % 20 + 80;
-        r->posY = rand() % 20 + 5;
-        r->velocity = rand() % 2 + 1;
-        r->size = rand() % 5 + 5;
+        r->size = randint(2,10);
+        r->posX = randint(120, 125);
+        r->posY = randint(7 - (r->size), 25 - (r->size));
+        r->velocity = randint(1,3);
         r->draw = 1;
 }
 
