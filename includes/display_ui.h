@@ -20,6 +20,8 @@
 
 void draw(Object o);
 
+void erase(Object o);
+
 void move(Object* o, int dir);
 
 void potentio_move(Object* o);
@@ -29,7 +31,5 @@ void drop(Rock* r);
 void draw_borders();
 
 void menu_screen();
-
-void game_over();
 
 #endif // _DISPLAY_UI_H_

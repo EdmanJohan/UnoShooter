@@ -63,7 +63,7 @@ void render();
  * @param y    [description]
  * @param data [description]
  */
-void print(int x, int y, const char *data);
+void print(int x, int y, const char *data, const int len);
 
 /**
  * Fills the SPI buffer and the display[] array with 0s.

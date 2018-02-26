@@ -2,7 +2,7 @@
 #define _OBJECT_H_
 
 typedef struct Object {
-        int posX, posY, size, vX, vY, isAlive;
+        float posX, posY, size, velX, velY, is_alive;
 } Object, Player, Rock, Shot;
 
 

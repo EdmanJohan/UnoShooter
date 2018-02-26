@@ -9,12 +9,12 @@ unsigned int seed() {
                 /* Start sampling, wait until conversion is done */
                 AD1CON1 |= (0x1 << 1);
                 while (!(AD1CON1 & (0x1 << 1)))
-                        seed ^= ADC1BUF0 + SPI2BUF;
+                        seed ^= ADC1BUF0 + TMR2;
                 while (!(AD1CON1 & 0x1))
-                        seed ^= ADC1BUF0 + SPI2BUF;
+                        seed ^= ADC1BUF0 + TMR2;
 
                 /* Get the analog value */
-                seed ^= ADC1BUF0 + SPI2BUF;
+                seed ^= ADC1BUF0 + TMR2;
         }
         return seed;
 }

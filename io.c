@@ -16,25 +16,6 @@ void init_pin() {
         AD1CON1SET = 1 << 15;
 }
 
-// void init_analog() {
-//     AD1PCFG = ~0x1100;
-//     TRISBSET = 0x1100;
-
-//     /* Use pin 2 for positive */
-//     AD1CHS = 1 << 17;
-
-//     /* Data format in uint32, 0 - 1024
-//     Manual sampling, auto conversion when sampling is done
-//     FORM = 0x4; SSRC = 0x7; CLRASAM = 0x0; ASAM = 0x0; */
-//     AD1CON1 = (0x4 << 8) | (0x7 << 5);
-
-//     AD1CON2 = 0;
-//     AD1CON3SET = 1 << 15;
-
-//     /* Turn on ADC */
-//     AD1CON1SET |= 1 << 15;
-// }
-
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.
