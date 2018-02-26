@@ -46,7 +46,7 @@ void object_move(Object *o) {
 void object_update(Object *o){
   erase(*o);
 
-  within_border(Object *o);
+  within_border(o);
 
   if (o->isAlive) {
       object_move(o);
@@ -89,5 +89,6 @@ int get_posY(Object *o) {
 }
 
 void within_border(Object *o) {
-        if (o->posX < o->size) o->isAlive = 0;
+        if (o->posX < o->size)
+               o->isAlive = 0;
 }
