@@ -20,7 +20,6 @@ const int ROCKS = 5;
 Player p;
 
 Rock rock_array[5];
-// ROCKS pebbles[10];
 
 void init() {
         set_btn(1, SET);
@@ -39,7 +38,7 @@ void init() {
 }
 
 void setup(void) {
-        player_new(&p, 10, 10, 10);
+        player_new(&p);
 
         int i;
         for (i = 0; i < ROCKS; i++) rock_new(&rock_array[i]);
@@ -65,10 +64,8 @@ void game_screen(void) {
         draw_borders();
 
         int i;
-        for (i = 0; i < ROCKS; i++) {
-                rock_update(&rock_array[i]);
-                rock_show(&rock_array[i]);
-        }
+        for (i = 0; i < ROCKS; i++)
+                object_update(&rock_array[i]);
 
         game_movement(&p);
         draw(p);

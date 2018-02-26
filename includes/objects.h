@@ -2,12 +2,26 @@
 #define _OBJECT_H_
 
 typedef struct Object {
-        int posX, posY, size, velocity, draw;
-} Object, Player, Rock;
+        int posX, posY, size, vX, vY, isAlive;
+} Object, Player, Rock, Shot;
 
-void player_new(Object *player, int posX, int posY, int size);
 
+/* === CONSTRUCTOS === */
+
+/* Player Constructor */
+void player_new(Object *player);
+
+/* Rock Constructor */
 void rock_new(Object *rock);
+
+/* Shot Constructor */
+void shot_new(Object *shot, Object *player);
+
+/* === UPDATE === */
+void object_update(Object *object);
+
+/* === MOVE === */
+void object_move(Object *object);
 
 void rock_update(Object *rock);
 

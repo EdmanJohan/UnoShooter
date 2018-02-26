@@ -2,39 +2,74 @@
 #include "includes/display_ui.h"
 #include "includes/standard.h"
 
-// Only rectangle size for now
-void player_new(Object *p, int posX, int posY, int size) {
-        p->posX = posX;
-        p->posY = posY;
-        p->size = size;
-        p->velocity = 1;
-        p->draw = 1;
+/* === CONSTRUCTORS === */
+
+/* Player Constructor */
+void player_new(Object *p) {
+        p->posX = 10;
+        p->posY = 10;
+        p->vX = 1;
+        p->vY = 1;
+        p->size = 10;
+        p->isAlive = 1;
 }
 
+/* Rock Constructor */
 void rock_new(Object *r) {
         r->posX = randint(115, 120);
         r->posY = randint(5, 25);
-        r->velocity = randint(1, 3);
+        r->vX = randint(0, 1);
+        r->vY = randint(1, 3);
         r->size = randint(3, 7);
-        r->draw = 1;
+        r->isAlive = 1;
 }
 
-void rock_move(Object *r) {
-        r->posX -= r->velocity;
+/* Shot Constructor */
+void new_shot(Object *s, Object *p) {
+      s->posX = p->posX;
+      s->posY = p->posY;
+      s->vX = 0;
+      s->vY = -1;
+      s->size = 1;
+      s->isAlive = 1;
 }
 
-void rock_update(Object *r) {
+/* === MOVE === */
+
+/* Object Move */
+void object_move(Object *o) {
+      o->posX += o->vX;
+      o->posY += o->vY;
+}
+
+/* === UPDATE === */
+void object_update(Object *o){
+  erase(*o);
+
+  within_border(Object *o);
+
+  if (o->isAlive) {
+      object_move(o);
+      draw(*o);
+  }
+}
+
+
+
+
+/*void rock_update(Object *r) {
         int i, j;
         for (i = 0; i <= r->size / 2; i++)
                 for (j = 0; j <= r->size / 2; j++)
                         unset_pixel(i + r->posX, j + r->posY);
 
         within_border(r);
-        if (r->draw) rock_move(r);
+        if (r->isAlive) object_move(r);
 }
 
+
 void rock_show(Object *r) {
-        if (r->draw) {
+        if (r->isAlive) {
                 int i, j;
                 for (i = 0; i <= r->size / 2; i++)
                         for (j = 0; j <= r->size / 2; j++)
@@ -43,6 +78,7 @@ void rock_show(Object *r) {
                 draw(*r);
         }
 }
+*/
 
 int get_posX(Object *o) {
         return o->posX + o->size / 2;
@@ -53,5 +89,5 @@ int get_posY(Object *o) {
 }
 
 void within_border(Object *o) {
-        if (o->posX < o->size) o->draw = 0;
+        if (o->posX < o->size) o->isAlive = 0;
 }

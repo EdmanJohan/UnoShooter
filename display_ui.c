@@ -25,16 +25,16 @@ void move(Object* o, int dir) {
 
         switch (dir) {
         case LEFT:
-                if (o->posY + o->size < WIDTH + 3) o->posY += o->velocity;
+                if (o->posY + o->size < WIDTH + 3) o->posY += o->vY;
                 break;
         case RIGHT:
-                if (o->posY > 1) o->posY -= o->velocity;
+                if (o->posY > 1) o->posY -= o->vY;
                 break;
         case UP:
-                if (o->posX + o->size < HEIGHT + 4) o->posX += o->velocity;
+                if (o->posX + o->size < HEIGHT + 4) o->posX += o->vX;
                 break;
         case DOWN:
-                if (o->posX > 10) o->posX -= o->velocity;
+                if (o->posX > 10) o->posX -= o->vX;
                 break;
         }
 
