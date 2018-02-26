@@ -44,7 +44,10 @@ void object_move(Object *o) {
 
 /* === UPDATE === */
 void object_update(Object *o){
-  erase(*o);
+  int i, j;
+  for (i = 0; i <= r->size / 2; i++)
+          for (j = 0; j <= r->size / 2; j++)
+                  unset_pixel(i + r->posX, j + r->posY);
 
   within_border(o);
 
