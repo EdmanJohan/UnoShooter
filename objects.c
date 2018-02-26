@@ -45,9 +45,9 @@ void object_move(Object *o) {
 /* === UPDATE === */
 void object_update(Object *o){
   int i, j;
-  for (i = 0; i <= r->size / 2; i++)
-          for (j = 0; j <= r->size / 2; j++)
-                  unset_pixel(i + r->posX, j + r->posY);
+  for (i = 0; i <= o->size / 2; i++)
+          for (j = 0; j <= o->size / 2; j++)
+                  unset_pixel(i + o->posX, j + o->posY);
 
   within_border(o);
 
