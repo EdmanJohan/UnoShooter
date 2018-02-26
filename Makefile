@@ -26,8 +26,8 @@ ASFILES		= $(wildcard *.S)
 SYMSFILES	= $(wildcard *.syms)
 
 # Object file names
-OBJFILES    =	$(CFILES:.c=.c.o)
-OBJFILES    +=	$(ASFILES:.S=.S.o)
+OBJFILES   =	$(CFILES:.c=.c.o)
+OBJFILES  +=	$(ASFILES:.S=.S.o)
 OBJFILES	+=	$(SYMSFILES:.syms=.syms.o)
 
 # Hidden directory for dependency files

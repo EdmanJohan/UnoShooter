@@ -15,6 +15,6 @@ void rock_show(Object *rock);
 
 void within_border(Object *obj);
 
+void shoot(Object *l, Object *p);
 
-
-#endif
+#endif // _OBJECT_H_

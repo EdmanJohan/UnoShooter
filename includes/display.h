@@ -11,6 +11,16 @@ typedef unsigned char byte;
 byte buffer[TOTAL_PIXELS];
 
 /**
+ * Enables a single pixel on the buffer at a specific location within the
+ * 128 x 32 resolution buffer.
+ * @param x The x-value of the pixel.
+ * @param y The y-value of the pixel.
+ */
+void set_pixel(int x, int y);
+
+void unset_pixel(int x, int y);
+
+/**
  * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
  */
 void init_timer();
