@@ -18,8 +18,8 @@ void player_new(Object *p) {
 void rock_new(Object *r) {
         r->posX = randint(115, 120);
         r->posY = randint(5, 25);
-        r->vX = randint(0, 1);
-        r->vY = randint(1, 3);
+        r->vX = -randint(1, 2);
+        r->vY = 0;
         r->size = randint(3, 7);
         r->isAlive = 1;
 }
