@@ -49,15 +49,15 @@ void potentio_move(Object* o) {
         ;
 
     erase(*o);
-    // slightly less than 1/8 to keep the player inside boundaries
-    o->posX = 15 * ADC1BUF0 / 128;
+    // less than 1/8 to keep the player inside boundaries
+    o->posX = 11 * ADC1BUF0 / 128;
     draw(*o);
 }
 
 void draw_borders() {
     int i;
-    for (i = 0; i < HEIGHT; i++) {
-        set_pixel(i, 0);
-        set_pixel(i, WIDTH - 1);
-    }
+    for (i = 0; i < HEIGHT; i++) set_pixel(i, WIDTH - 1);
+    for (i = 0; i < HEIGHT - 26; i++) set_pixel(i, 0);
+    for (i = 0; i < 9; i++) set_pixel(HEIGHT - 26, i);
+    for (i = HEIGHT - 26; i < HEIGHT; i++) set_pixel(i, 9);
 }

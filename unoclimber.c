@@ -15,13 +15,15 @@
 
 int current_screen = -1;
 int is_initialized = 0;
-byte points = 0x00;
+int points = 0;
 char char_points[4];
+int counter = 36;
 const int ROCKS = 5;
 
 Player p;
 
 Rock rock_array[5];
+Shot shot_array[10];
 
 void init() {
     set_btn(1, SET);
@@ -38,6 +40,29 @@ void init() {
     init_display();
     init_timer();
     start_timer();
+}
+
+// modified from bhuwansahni's original code from
+// https://stackoverflow.com/questions/9655202/how-to-convert-integer-to-string-in-c
+char* itoa(int i, char b[]) {
+    char const digit[] = "0123456789";
+    char* p = b;
+    int shifter = 100;
+
+    // Move to where representation ends
+    do {
+        ++p;
+        shifter = shifter / 10;
+    } while (shifter);
+
+    // Move back, inserting digits as u go
+    *p = '\0';
+    do {
+        *--p = digit[i % 10];
+        i = i / 10;
+    } while (i);
+
+    return b;
 }
 
 void spawn_rocks() {
@@ -59,9 +84,11 @@ void game_movement(Object* o) {
 }
 
 void menu_screen(void) {
-    print(5, 0, "1: START", 8);
-    print(5, 1, "2: INSTRUCTIONS", 15);
-    print(5, 2, "3: CREDITS", 10);
+    print(20, 0, "HIGH SCORE:", 11);
+    print(20, 1, "1: START", 8);
+    print(20, 2, "2: INFO", 7);
+    print(20, 3, "3: CREDITS", 10);
+    render();
 
     if (get_btn(1)) {
         current_screen = 3;  // start
@@ -84,6 +111,7 @@ void instructions_screen(void) {
     print(14, 1, "THE ROCKS TO", 12);
     print(20, 2, "STAY ALIVE!", 11);
     print(30, 3, "4: MENU", 7);
+    render();
 
     if (get_btn(4)) {
         current_screen = 0;  // menu
@@ -91,13 +119,12 @@ void instructions_screen(void) {
     }
 }
 
-void num2string(char*, int);
-
 void credits_screen(void) {
     print(25, 0, "A GAME BY", 9);
     print(35, 1, "JEDMEX", 6);
     print(15, 2, "PRODUCTIONS", 11);
     print(30, 3, "4: MENU", 7);
+    render();
 
     if (get_btn(4)) {
         current_screen = 0;  // menu
@@ -106,9 +133,16 @@ void credits_screen(void) {
 }
 
 void point_counter() {
-    points += 1;
-    num2string(char_points, points);
-    print(0, 3, char_points, 4);
+    if (points < 999) {
+        counter++;
+
+        if (counter > 35) {
+            counter = 0;
+            points += 1;
+            itoa(points, char_points);
+            print(104, 0, char_points, 3);
+        }
+    }
 }
 
 void game_screen(void) {
@@ -117,12 +151,16 @@ void game_screen(void) {
     if (next_frame()) {
         // if (TMR2 % 20 == 0) spawn_rocks();
 
-        int i;
-        for (i = 0; i < ROCKS; i++) object_update(&rock_array[i]);
+        // int i;
+        // for (i = 0; i < ROCKS; i++) object_update(&rock_array[i]);
+
+        // shot_new(&shot, &p);
 
         draw_borders();
         point_counter();
         game_movement(&p);
+
+        render();
     }
 }
 
@@ -130,6 +168,7 @@ void logo_screen(void) {
     print(28, 0, "UNOROCKET", 9);
     print(24, 2, "PRESS BTN4", 10);
     print(20, 3, "TO CONTINUE", 11);
+    render();
 
     if (get_btn(4)) {
         current_screen = 0;
@@ -160,8 +199,6 @@ void draw_display() {
             logo_screen();
             break;
     }
-
-    render();
 }
 
 int main(void) {
