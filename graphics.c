@@ -1,7 +1,5 @@
 #include "includes/graphics.h"
 
-// byte player[2][2];
-
 byte font[] = {
         0, 0,   0,   0,   0,   0,   0,  0, 0, 0,   0,   0,   0,   0,   0,  0,
         0, 0,   0,   0,   0,   0,   0,  0, 0, 0,   0,   0,   0,   0,   0,  0,

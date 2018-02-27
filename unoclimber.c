@@ -15,6 +15,8 @@
 
 int current_screen = -1;
 int is_initialized = 0;
+byte points = 0x00;
+char char_points[4];
 const int ROCKS = 5;
 
 Player p;
@@ -89,6 +91,8 @@ void instructions_screen(void) {
     }
 }
 
+void num2string(char*, int);
+
 void credits_screen(void) {
     print(25, 0, "A GAME BY", 9);
     print(35, 1, "JEDMEX", 6);
@@ -101,15 +105,23 @@ void credits_screen(void) {
     }
 }
 
+void point_counter() {
+    points += 1;
+    num2string(char_points, points);
+    print(0, 3, char_points, 4);
+}
+
 void game_screen(void) {
+    if (!is_initialized) setup();
+
     if (next_frame()) {
-        if (!is_initialized) setup();
         // if (TMR2 % 20 == 0) spawn_rocks();
 
         int i;
         for (i = 0; i < ROCKS; i++) object_update(&rock_array[i]);
 
         draw_borders();
+        point_counter();
         game_movement(&p);
     }
 }
@@ -125,7 +137,7 @@ void logo_screen(void) {
     }
 }
 
-void finished_screen() {}
+void finished_screen() { print(30, 3, "you ded lol", 11); }
 
 void draw_display() {
     switch (current_screen) {

@@ -166,7 +166,7 @@ void init_display() {
  * @param x    [description]
  * @param y    [description]
  * @param data [description]
- * @param len  
+ * @param len
  */
 void print(int x, int line, const char* string, const int len) {
     int i, j;
