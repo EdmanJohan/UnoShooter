@@ -3,5 +3,6 @@
 
 typedef unsigned char byte;
 extern byte font[];
+extern byte logo[];
 
 #endif // _GRAPHICS_H_

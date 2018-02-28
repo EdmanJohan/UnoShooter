@@ -8,6 +8,7 @@
 
 void init_pin();
 
+void init_input();
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.

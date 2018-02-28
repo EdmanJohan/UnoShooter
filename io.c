@@ -16,6 +16,16 @@ void init_pin() {
         AD1CON1SET = 1 << 15;
 }
 
+void init_input() {
+        set_btn(1, SET);
+        set_btn(2, SET);
+        set_btn(3, SET);
+        set_btn(4, SET);
+
+        set_sw(1, SET);
+        set_sw(2, SET);
+}
+
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.
