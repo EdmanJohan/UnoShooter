@@ -1,6 +1,10 @@
 #include "includes/objects.h"
 #include "includes/display_ui.h"
 #include "includes/standard.h"
+#include "includes/registers.h"
+#include <stdlib.h>
+#include <string.h>
+
 
 /*
    TODO: Add various design to objects instead of rectangles.
@@ -46,7 +50,7 @@ Rock rock_new() {
         Rock r;
         r.size = 10;
         r.posX = randint(120, 130);
-        r.posY = randint(r.size, 32-r.size);
+        r.posY = randint(5, 32-r.size);
         r.velX = -randfloat(0.1, 1.2);
         r.velY = 0;
         r.is_alive = 1;
@@ -76,12 +80,7 @@ Rock rock_new() {
 Shot shot_new(Object p) {
         Shot s;
         s.posX = p.posX;
-
-        if (rand() % 2 == 1)
-                s.posY = p.posY / 2;
-        else
-                s.posY = p.posY + p.size / 2;
-
+        s.posY = p.posY;
         s.velX = 1;
         s.velY = 0;
         s.size = 10;
@@ -95,7 +94,7 @@ Shot shot_new(Object p) {
                 {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
@@ -130,6 +129,7 @@ void object_update(Object *o) {
         within_border(o);
 
         if (o->is_alive) {
+                draw(*o, 0);
                 object_move(o);
 
                 if (within_screen(o))
@@ -177,10 +177,14 @@ void within_border(Object *o) {
 
 /* Check if within screen */
 int within_screen(Object *o) { // TODO: Is this working correctly?
-        if (o->posX > 0 && o->posX < (127 - o->size) && (o->posY + o->velY) > 0 && (o->posY + o->size + o->velY) < 32)
+        if (o->posX > 0 && o->posX < (128 - o->size) && (o->posY + o->velY) > 0 && (o->posY + o->size + o->velY) < 32)
                 return 1;
         return 0;
-        //if (o->posX < 0 || o->posX > (127 - o->size) || (o->posY - o->velY) <= 1 || o->posY >= 31)
-        //        return 0;
-        //return 1;
+}
+
+int check_collision(Object dis, Object dat) {
+        if (dist(dis.posX, dis.posY, dat.posX, dat.posY) < 5) {
+                return 1;
+        }
+        return 0;
 }

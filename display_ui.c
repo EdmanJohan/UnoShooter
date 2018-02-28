@@ -41,7 +41,7 @@ void potentio_move(Object* o) {
         while (!(AD1CON1 & 1));
 
         draw(*o, 0);
-        o->posX = 11 * ADC1BUF0 / 128; // less than 1/8 to keep the player inside boundaries
+        o->posX = 11 * ADC1BUF0 / 128 + 1; // less than 1/8 to keep the player inside boundaries
         draw(*o, 1);
 }
 

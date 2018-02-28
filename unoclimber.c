@@ -17,11 +17,14 @@ char char_points[4];
 int counter = 36;
 
 int points = 0;
+int shot_delay = 0;
 
 
 Player p;
-Rock rock_array[10];
-Shot shot_array[10];
+//Rock rock_array[10];
+//Shot shot_array[10];
+Rock r;
+Shot s;
 int rock_count;
 int shot_count;
 
@@ -39,24 +42,22 @@ void init() {
 void spawn_object(char c) {
         switch (c) {
         case 'r':
-                if (rand() % 100 > 65 ) { // TODO: ADD TIMER4 REQ.
-                        if (rock_array[rock_count].is_alive == 1)
-                                break;
-                        rock_count %= 10;
-                        rock_array[rock_count++] = rock_new();
-                }
+                if(!r.is_alive)
+                        r = rock_new();
                 break;
         case 's':
-                if (shot_array[shot_count].is_alive != 1) {
-                        shot_count %= 10;
-                        shot_array[shot_count++] = shot_new(p);
-                }
+                if (!s.is_alive)
+                        s = shot_new(p);
                 break;
         }
 }
 
 
 void setup(void) {
+
+        TRISE = 0; // DEBUG FOR COLLISION
+        PORTE = 0xFF; // DEBUG FOR COLLISION
+
         rock_count = 0;
         shot_count = 0;
         p = player_new();
@@ -129,10 +130,10 @@ void point_counter() {
                 if (counter > 35) {
                         counter = 0;
                         points += 1;
-                        itoa(points, char_points);
-                        print(104, 0, char_points, 3);
                 }
         }
+        itoa(points, char_points);
+        print(104, 0, char_points, 3);
 }
 
 void game_screen(void) {
@@ -140,18 +141,26 @@ void game_screen(void) {
 
         if (next_frame()) {
 
-                if (get_btn(2)) // TODO: Add interrupt to prevent too many shots
+                if (get_btn(2)) // TODO: Add interrupt to prevent too many shots 0x10000
                         spawn_object('s');
 
-                if (TMR2 % 5 == 0)
+                if (TMR2 % 5 == 0) {
                         spawn_object('r');
-
-                int i;
-                for (i = 0; i < 10; i++) {
-                        object_update(&rock_array[i]);
-                        object_update(&shot_array[i]);
+                        PORTE = 0xFF; // DEBUG
                 }
 
+                if (r.is_alive)
+                        if (check_collision(p, r))
+                                PORTE = 0x00;
+
+                if (s.is_alive)
+                        if (check_collision(s, r)) {
+                                s.is_alive = 0;
+                                r.is_alive = 0;
+                        }
+
+                object_update(&s);
+                object_update(&r);
 
                 draw_borders();
                 point_counter();
@@ -165,9 +174,7 @@ void logo_screen(void) {
         int i;
         for(i = 0; i < 512; i++)
                 buffer[i] = logo[i];
-        //print(28, 0, "UNOROCKET", 9);
-        //print(24, 2, "PRESS BTN4", 10);
-        //print(20, 3, "TO CONTINUE", 11);
+
         render();
 
         if (get_btn(4)) {

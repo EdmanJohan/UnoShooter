@@ -22,8 +22,7 @@ static int counter = 0;
  */
 void delay(int del) {
         int i;
-        for (i = 0; i < del; i++)
-                ;
+        for (i = 0; i < del; i++);
 }
 
 /**
@@ -59,10 +58,11 @@ void init_timer(int t) {
                 break;
         case 4:
                 T4CON = 0x0;
-                PR4 = 0x100;
+                PR4 = 0x7A12; // 100ms
 
-                IPCSET(4) = 0xD;
-                IECSET(4) = 0x1;
+                IPCSET(4) = 0xD; // IEC Bit 16
+                IECSET(4) = 0x1; //
+
 
                 T4CONSET = 0x70;
                 TMR4 = 0x0;

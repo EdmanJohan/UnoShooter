@@ -1,6 +1,9 @@
-#include <stdlib.h>
 #include "includes/io.h"
 #include "includes/registers.h"
+#include "includes/standard.h"
+#include <stdlib.h>
+#include <math.h>
+
 
 unsigned int seed() {
         int n = 8;
@@ -52,4 +55,11 @@ char* itoa(int i, char b[]) {
         } while (i);
 
         return b;
+}
+
+int dist(float x1, float y1, float x2, float y2) {
+        int dx = (int) (x2 - x1) * (x2 - x1);
+        int dy = (int) (y2 - y1) * (y2 - y1);
+
+        return (int) sqrt(dx + dy);
 }
