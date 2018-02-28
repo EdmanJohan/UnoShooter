@@ -1,34 +1,33 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
+typedef int objectPointer[10][10];
 
 typedef struct Object {
         float posX, posY, size, velX, velY, is_alive;
+        objectPointer objForm;
 } Object, Player, Rock, Shot;
 
-
-/* === CONSTRUCTOS === */
+/* === CONSTRUCTORS === */
 
 /* Player Constructor */
-void player_new(Object *player);
+Player player_new();
 
 /* Rock Constructor */
-void rock_new(Object *rock);
+Rock rock_new();
 
 /* Shot Constructor */
-void shot_new(Object *shot, Object *player);
+Shot shot_new(Object player);
 
 /* === UPDATE === */
+void player_update(Object *player);
+
 void object_update(Object *object);
 
 /* === MOVE === */
 void object_move(Object *object);
 
-void rock_update(Object *rock);
+int within_screen(Object *object);
 
-void rock_show(Object *rock);
-
-void within_border(Object *obj);
-
-void shoot(Object *l, Object *p);
+void within_border(Object *object);
 
 #endif // _OBJECT_H_

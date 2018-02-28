@@ -23,26 +23,26 @@ void unset_pixel(int x, int y);
 /**
  * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
  */
-void init_timer();
+void init_timer(int timer);
 
 /**
  * Starts Timer2.
  */
-void start_timer();
+void start_timer(int timer);
 
 /**
  * Stops Timer2.
  */
-void stop_timer();
+void stop_timer(int timer);
 
-/** 
+/**
  * Keeps the counter variable.
  * @return 1 is counter is full, else 0.
  */
 int next_frame();
 
 /**
- * Simple delay function. 
+ * Simple delay function.
  * @param del Number of cycles to "stall".
  */
 void delay(int del);

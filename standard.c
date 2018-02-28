@@ -26,3 +26,30 @@ int randint(int min, int max) {
         if (r < min) r += min;
         return r;
 }
+
+float randfloat(float min, float max) {
+        return (((float) rand() / (float) RAND_MAX)) * (max - min) + min;
+}
+
+// modified from bhuwansahni's original code from
+// https://stackoverflow.com/questions/9655202/how-to-convert-integer-to-string-in-c
+char* itoa(int i, char b[]) {
+        char const digit[] = "0123456789";
+        char* p = b;
+        int shifter = 100;
+
+        // Move to where representation ends
+        do {
+                ++p;
+                shifter = shifter / 10;
+        } while (shifter);
+
+        // Move back, inserting digits as u go
+        *p = '\0';
+        do {
+                *--p = digit[i % 10];
+                i = i / 10;
+        } while (i);
+
+        return b;
+}

@@ -18,15 +18,11 @@
 #define PAGES 4
 #define TOTAL_PIXELS (HEIGHT * WIDTH / PIXEL_UNIT)
 
-void draw(Object o);
-
-void erase(Object o);
+void draw(Object o, int draw);
 
 void move(Object* o, int dir);
 
 void potentio_move(Object* o);
-
-void drop(Rock* r);
 
 void draw_borders();
 
