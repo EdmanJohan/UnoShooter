@@ -17,7 +17,7 @@
 static int counter = 0;
 
 /**
- * Simple delay function. TO BE REPLACED!
+ * Simple delay function. 
  * @param del Number of cycles to "stall".
  */
 void delay(int del) {
@@ -47,25 +47,25 @@ void unset_pixel(int x, int y) {
 void init_timer(int t) {
         switch (t) {
         case 2:
-                T2CON = 0x0; // STOP TIMER & CLEAR CONTROL REGISTERS
+                T2CON = 0; // STOP TIMER & CLEAR CONTROL REGISTERS
                 PR2 = 0x100; // PERIOD INITALIZED TO 31250, 0x7A12
 
                 IPCSET(2) = 0xD; // SET INTERRUPT PRIORITY 3-1
                 IECSET(0) = 0x900; // ENABLE INTERRUPTS
 
                 T2CONSET = 0x70; // 1:256 PRESCALE
-                TMR2 = 0x0; // CLEAR TIMER REGISTER
+                TMR2 = 0; // CLEAR TIMER REGISTER
                 break;
-        case 4:
-                T4CON = 0x0;
-                PR4 = 0x7A12; // 100ms
+        case 3:
+                T3CON = 0;
+                PR3 = 312500; 
 
-                IPCSET(4) = 0xD; // IEC Bit 16
-                IECSET(4) = 0x1; //
+                IPC(3) = 0x1B; // IEC Bit 16
+                IECSET(0) = 0x1000; //
 
 
-                T4CONSET = 0x70;
-                TMR4 = 0x0;
+                T3CONSET = 0x70;
+                TMR3 = 0;
                 break;
         }
 }
@@ -78,8 +78,8 @@ void start_timer(int t) {
         case 2:
                 T2CONSET = 0x8000;
                 break;
-        case 4:
-                T4CONSET = 0x8000;
+        case 3:
+                T3CONSET = 0x8000;
                 break;
         }
 }
@@ -92,8 +92,8 @@ void stop_timer(int t) {
         case 2:
                 T2CONCLR = 0x8000;
                 break;
-        case 4:
-                T4CONCLR = 0x8000;
+        case 3:
+                T3CONCLR = 0x8000;
                 break;
         }
 }
@@ -202,7 +202,7 @@ void init_display() {
  */
 void print(int x, int line, const char* string, const int len) {
         int i, j;
-
+        
         for (i = 0; i < len + 1; i++)
                 for (j = 0; j < PIXEL_UNIT; j++)
                         buffer[line * 128 + x + i * PIXEL_UNIT + j] =

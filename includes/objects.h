@@ -3,9 +3,9 @@
 typedef int objectPointer[10][10];
 
 typedef struct Object {
-        float posX, posY, size, velX, velY;
-        int is_alive;
-        objectPointer objForm;
+    float posX, posY, size, velX, velY;
+    int is_alive;
+    objectPointer objForm;
 } Object, Player, Rock, Shot;
 
 /* === CONSTRUCTORS === */
@@ -33,4 +33,4 @@ int within_screen(Object *object);
 
 void within_border(Object *object);
 
-#endif // _OBJECT_H_
+#endif  // _OBJECT_H_

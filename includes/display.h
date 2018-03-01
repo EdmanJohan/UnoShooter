@@ -58,7 +58,7 @@ void init_display();
 void render();
 
 /**
- * Prints characters on the display. NON-FUNCTIONAL!
+ * Prints characters on the display.
  * @param x    [description]
  * @param y    [description]
  * @param data [description]
