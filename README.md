@@ -5,7 +5,7 @@
 
 
 ### About
-This is a repository for the IS1200 mini-project, for the course that ran in the spring of 2017.
+This is a repository for the IS1200 mini-project, for the course that ran in the spring of 2017. <br>
 This project is inspired by/a clone of *Asteroid Blaster*-themed games.
 
 The project Abstract can be viewed -> [Here](https://1drv.ms/b/s!AjLSPhbgWJ4G3CxRmtLx8wLUIsEN). <br>
