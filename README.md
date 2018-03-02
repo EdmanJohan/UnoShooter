@@ -7,7 +7,7 @@
 ### About
 This is a repository for the IS1200 mini-project, for the course that ran in the spring of 2017.
 
-This project is inspired by/a clone of *Asteroid Blaster* games.
+This project is inspired by/a clone of *Asteroid Blaster*-themed games.
 
 
 
