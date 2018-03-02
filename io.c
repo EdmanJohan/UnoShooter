@@ -1,7 +1,6 @@
 #include "includes/io.h"
 #include "includes/registers.h"
 
-
 void init_pin() {
         AD1PCFG = 0xFBFF;
         AD1CON1 = 4 << 8 | 7 << 5;

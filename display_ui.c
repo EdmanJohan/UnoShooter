@@ -7,42 +7,44 @@
 #define DOWN 3
 
 void draw(Object o, int draw) {
-        int i, j;
+    int i, j;
 
-        for(i = 0; i < o.size; i++)
-                for (j = 0; j < o.size; j++)
-                        if (o.objForm[i][j] == 1) {
-                                if (draw)
-                                        set_pixel(i + o.posX, j + o.posY);
-                                else if (!draw)
-                                        unset_pixel(i + o.posX, j + o.posY);
-                        }
+    for (i = 0; i < o.size; i++)
+        for (j = 0; j < o.size; j++)
+            if (o.objForm[i][j] == 1)
+                if (draw)
+                    set_pixel(i + o.posX, j + o.posY);
+                else if (!draw)
+                    unset_pixel(i + o.posX, j + o.posY);
 }
 
-void move(Object *o, int dir) {
-        draw(*o, 0);
+void move(Object* o, int dir) {
+    draw(*o, 0);
 
-        switch (dir) {
-        case LEFT: // UP
-                o->velX = 0;
-                o->velY = 1;
-                break;
-        case RIGHT: // DOWN
-                o->velX = 0;
-                o->velY = -1;
-                break;
-        }
-        player_update(o);
+    switch (dir) {
+        case LEFT:  // UP
+            o->velX = 0;
+            o->velY = 1;
+            break;
+        case RIGHT:  // DOWN
+            o->velX = 0;
+            o->velY = -1;
+            break;
+    }
+    player_update(o);
 }
 
 void potentio_move(Object* o) {
-        AD1CON1SET = 1 << 1;
-        while (!(AD1CON1 & (1 << 1)));
-        while (!(AD1CON1 & 1));
+    AD1CON1SET = 1 << 1;
+    while (!(AD1CON1 & (1 << 1)))
+        ;
+    while (!(AD1CON1 & 1))
+        ;
 
-        draw(*o, 0);
-        o->posX = 11 * ADC1BUF0 / 128; // less than 1/8 to keep the player inside boundaries
-        draw(*o, 1);
+    draw(*o, 0);
+    // less than 1/8 to keep the player inside boundaries
+    o->posX = 11 * ADC1BUF0 / 128 + 1;
+    draw(*o, 1);
 }
 
 void draw_borders() {

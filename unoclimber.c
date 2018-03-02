@@ -1,71 +1,87 @@
-#include "includes/display.h"
+#include <stdlib.h>
 #include "includes/display_ui.h"
 #include "includes/graphics.h"
 #include "includes/io.h"
-#include "includes/objects.h"
+#include "includes/memory.h"
 #include "includes/registers.h"
-
-#include <stdlib.h>
 #include "includes/standard.h"
 
+#define MAX_AMMO 3
+#define MAX_ROCK 15
+#define MAX_HEALTH 3
+#define POINTS 5
 
-
-/* Game Variables */
+/* Game Settings */
 int current_screen = -1;
 int is_initialized = 0;
-char char_points[4];
+char char_player_score[3];
+char char_high_score[3];
 int counter = 36;
 
-int points = 0;
+/* Game Variables */
+int high_score = 0;
+int player_score;
+int invincible = 0;
+int cooldown = 1;
+int shot_count = 0;
+int player_health = 3;
+int ammo = 3;
 
-
+/* Objects */
 Player p;
-Rock rock_array[10];
-Shot shot_array[10];
-int rock_count;
-int shot_count;
+Shot shot_array[MAX_AMMO];
+Rock r;
+// Rock rock_array[MAX_ROCK];
 
 /* Initialize Controls */
 void init() {
-        init_input();
-        init_pin();
-        srand(seed());
+    init_input();
+    init_pin();
+    srand(seed());
 
-        init_display();
-        init_timer(2);
-        start_timer(2);
+    i2c_init();
+    read_data(0, char_high_score, 3);
+
+    init_display();
+    init_timer(2);
+    init_timer(3);
 }
 
 void spawn_object(char c) {
-        switch (c) {
+    switch (c) {
         case 'r':
-                if (rand() % 100 > 65 ) { // TODO: ADD TIMER4 REQ.
-                        if (rock_array[rock_count].is_alive == 1)
-                                break;
-                        rock_count %= 10;
-                        rock_array[rock_count++] = rock_new();
-                }
-                break;
+            if (!r.is_alive) r = rock_new();
+            break;
         case 's':
-                if (shot_array[shot_count].is_alive != 1) {
-                        shot_count %= 10;
-                        shot_array[shot_count++] = shot_new(p);
-                }
-                break;
-        }
+            shot_count %= MAX_AMMO;
+            if (shot_array[shot_count].is_alive != 1)
+                shot_array[shot_count] = shot_new(p);
+            shot_count++;
+            break;
+    }
 }
 
-
 void setup(void) {
-        rock_count = 0;
-        shot_count = 0;
-        p = player_new();
+    clear();
 
-        is_initialized = 1;
+    player_health = MAX_HEALTH;
+    player_score = 0;
+    shot_count = 0;
+    // rock_count = 0;
+
+    int i;
+    for (i = 0; i < 4; i++) char_player_score[i] = 0;
+
+    p = player_new();
+
+    start_timer(2);
+    start_timer(3);
+
+    is_initialized = 1;
 }
 
 void player_input(Object* o) {
-        potentio_move(o);
+    potentio_move(o);
 
         if (get_btn(4))
                 move(o, RIGHT);
@@ -74,110 +90,185 @@ void player_input(Object* o) {
 }
 
 void menu_screen(void) {
-        print(20, 0, "HIGH SCORE:", 11);
-        print(20, 1, "1: START", 8);
-        print(20, 2, "2: INFO", 7);
-        print(20, 3, "3: CREDITS", 10);
-        render();
+    clear();
 
-        if (get_btn(1)) {
-                current_screen = 3; // start
-                clear();
-        }
+    print(0, 0, "HIGH SCORE:", 11);
+    print(90, 0, char_high_score, 3);
+    print(20, 1, "1: START", 8);
+    print(20, 2, "2: INFO", 7);
+    print(20, 3, "3: CREDITS", 10);
 
-        if (get_btn(2)) {
-                current_screen = 1; // instructions
-                clear();
-        }
+    if (get_btn(1)) current_screen = 3;  // start
 
-        if (get_btn(3)) {
-                current_screen = 2; // credits
-                clear();
-        }
+    if (get_btn(2)) current_screen = 1;  // instructions
+
+    if (get_btn(3)) current_screen = 2;  // credits
 }
 
 void instructions_screen(void) {
-        print(6, 0, "AVOID OR SHOOT", 14);
-        print(14, 1, "THE ROCKS TO", 12);
-        print(20, 2, "STAY ALIVE!", 11);
-        print(30, 3, "4: MENU", 7);
-        render();
+    clear();
 
-        if (get_btn(4)) {
-                current_screen = 0; // menu
-                clear();
-        }
+    print(6, 0, "AVOID OR SHOOT", 14);
+    print(14, 1, "THE ROCKS TO", 12);
+    print(20, 2, "STAY ALIVE!", 11);
+    print(30, 3, "4: MENU", 7);
+    render();
+
+    if (get_btn(4)) current_screen = 0;  // menu
 }
 
 void credits_screen(void) {
-        print(25, 0, "A GAME BY", 9);
-        print(35, 1, "JEDMEX", 6);
-        print(15, 2, "PRODUCTIONS", 11);
-        print(30, 3, "4: MENU", 7);
-        render();
+    clear();
 
-        if (get_btn(4)) {
-                current_screen = 0; // menu
-                clear();
-        }
+    print(25, 0, "A GAME BY", 9);
+    print(35, 1, "JEDMEX", 6);
+    print(15, 2, "PRODUCTIONS", 11);
+    print(30, 3, "4: MENU", 7);
+    render();
+
+    if (get_btn(4)) current_screen = 0;  // menu
 }
 
-void point_counter() {
-        if (points < 999) {
-                counter++;
+void score_update() {
+    to_char(player_score, char_player_score);
+    print(104, 0, char_player_score, 3);
+}
 
-                if (counter > 35) {
-                        counter = 0;
-                        points += 1;
-                        itoa(points, char_points);
-                        print(104, 0, char_points, 3);
-                }
+void increase_score() {
+    if (player_score + POINTS > 999)
+        player_score = 999;
+    else
+        player_score += POINTS;
+}
+
+void finished_screen() {
+    clear();
+
+    if (player_score > high_score) {
+        high_score = player_score;
+        to_char(high_score, char_high_score);
+        write_data(0, char_high_score, 3);
+    }
+
+    print(20, 0, "Game over!", 10);
+    print(20, 1, "Score: ", 7);
+    print(76, 1, char_player_score, 3);
+    print(20, 3, "Press BTN4", 11);
+
+    if (get_btn(4)) {
+        current_screen = 0;
+        is_initialized = 0;
+    }
+}
+
+void check_health() {
+    if (check_collision(p, r)) {
+        if (IFS(0) & 0x9000) {
+            invincible++;
+            IFSCLR(0) = 0x9000;
         }
+
+        if (invincible > 1) {
+            invincible = 0;
+            player_health--;
+        }
+    }
+
+    if (player_health == 3) {
+        set_led(8, SET);
+        set_led(7, SET);
+        set_led(6, SET);
+    } else if (player_health == 2) {
+        set_led(6, CLR);
+    } else if (player_health == 1) {
+        set_led(7, CLR);
+    } else if (player_health <= 0) {
+        PORTE = 0;
+        p.is_alive = 0;
+    }
+}
+
+int check_ammo() {
+    int count = 0;
+
+    int i;
+    for (i = 0; i < MAX_AMMO; i++)
+        if (!shot_array[i].is_alive) count++;
+
+    if (count == 3) {
+        set_led(3, SET);
+        set_led(2, SET);
+        set_led(1, SET);
+    } else if (count == 2) {
+        set_led(3, CLR);
+        set_led(2, SET);
+        set_led(1, SET);
+    } else if (count == 1) {
+        set_led(3, CLR);
+        set_led(2, CLR);
+        set_led(1, SET);
+    } else if (count == 0) {
+        set_led(3, CLR);
+        set_led(2, CLR);
+        set_led(1, CLR);
+    }
+
+    return count;
+}
+
+void shoot() {
+    if (IFS(0) & 0x9000) {
+        IFSCLR(0) = 0x9000;
+        if (cooldown == 0) {
+            spawn_object('s');
+            cooldown = 1;
+        } else
+            cooldown--;
+    }
 }
 
 void game_screen(void) {
         if (!is_initialized) setup();
 
-        if (next_frame()) {
+    if (next_frame()) {
+        if (check_ammo() > 0 && get_btn(2)) shoot();
+        check_health();
 
-                if (get_btn(2)) // TODO: Add interrupt to prevent too many shots
-                        spawn_object('s');
+        if (TMR2 % 5 == 0) spawn_object('r');
 
-                if (TMR2 % 5 == 0)
-                        spawn_object('r');
-
-                int i;
-                for (i = 0; i < 10; i++) {
-                        object_update(&rock_array[i]);
-                        object_update(&shot_array[i]);
-                }
-
-
-                draw_borders();
-                point_counter();
-                player_input(&p);
-
-                render();
+        if (!p.is_alive) {
+            r.is_alive = 0;
+            stop_timer(2);
+            current_screen = 4;
         }
+
+        int i;
+        for (i = 0; i < MAX_AMMO; i++) {
+            if (shot_array[i].is_alive)
+                if (check_collision(shot_array[i], r)) {
+                    increase_score();
+                    shot_array[i].is_alive = 0;
+                    r.is_alive = 0;
+                }
+            object_update(&shot_array[i]);
+        }
+
+        object_update(&r);
+
+        draw_borders();
+        score_update();
+        player_input(&p);
+    }
 }
 
 void logo_screen(void) {
-        int i;
-        for(i = 0; i < 512; i++)
-                buffer[i] = logo[i];
-        //print(28, 0, "UNOROCKET", 9);
-        //print(24, 2, "PRESS BTN4", 10);
-        //print(20, 3, "TO CONTINUE", 11);
-        render();
+    int i;
+    for (i = 0; i < 512; i++) buffer[i] = logo[i];
 
-        if (get_btn(4)) {
-                current_screen = 0;
-                clear();
-        }
-}
-
-void finished_screen() {
-        print(30, 3, "you ded lol", 11);
+    if (get_btn(4)) {
+        current_screen = 0;
+        clear();
+    }
 }
 
 void draw_display() {
@@ -198,9 +289,10 @@ void draw_display() {
                 finished_screen();
                 break;
         default:
-                logo_screen();
-                break;
-        }
+            logo_screen();
+            break;
+    }
+    render();
 }
 
 int main(void) {

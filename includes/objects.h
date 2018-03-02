@@ -3,8 +3,9 @@
 typedef int objectPointer[10][10];
 
 typedef struct Object {
-        float posX, posY, size, velX, velY, is_alive;
-        objectPointer objForm;
+    float posX, posY, size, velX, velY;
+    int is_alive;
+    objectPointer objForm;
 } Object, Player, Rock, Shot;
 
 /* === CONSTRUCTORS === */
@@ -26,8 +27,11 @@ void object_update(Object *object);
 /* === MOVE === */
 void object_move(Object *object);
 
+
+int check_collision(Object o1, Object o2);
+
 int within_screen(Object *object);
 
 void within_border(Object *object);
 
-#endif // _OBJECT_H_
+#endif  // _OBJECT_H_

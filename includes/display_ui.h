@@ -12,12 +12,6 @@
 #define UP 2
 #define DOWN 3
 
-#define PIXEL_UNIT 8
-#define HEIGHT 128
-#define WIDTH 32
-#define PAGES 4
-#define TOTAL_PIXELS (HEIGHT * WIDTH / PIXEL_UNIT)
-
 void draw(Object o, int draw);
 
 void move(Object* o, int dir);
