@@ -1,9 +1,0 @@
-# Following files should be ignored when uploading to repository.
-.deps
-*.o
-*.elf
-*.hex
-*.gch
-
-# Following folder should be ignored.
-docs/
