@@ -16,9 +16,8 @@ byte buffer[TOTAL_PIXELS];
  * @param x The x-value of the pixel.
  * @param y The y-value of the pixel.
  */
-void set_pixel(int x, int y);
+void set_pixel(int x, int y, int state);
 
-void unset_pixel(int x, int y);
 
 /**
  * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
