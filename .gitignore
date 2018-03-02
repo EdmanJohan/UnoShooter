@@ -4,6 +4,3 @@
 *.elf
 *.hex
 *.gch
-
-# Following folder should be ignored.
-docs/
