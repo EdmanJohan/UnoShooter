@@ -5,9 +5,9 @@
 //#include "includes/registers.h"
 //#include <stdlib.h>
 
-/* === CONSTRUCTORS === */
-int rock_count = 0;
-int shot_count = 0;
+// /* === CONSTRUCTORS === */
+// int rock_count = 0;
+// int shot_count = 0;
 
 /* Player Constructor */
 Player player_new() {

@@ -11,14 +11,26 @@
 #define MAX_HEALTH 3
 #define POINTS 5
 
-/* Game Settings */
+#define MENU 0
+#define INSTRUCTIONS 1
+#define CREDITS 2
+#define GAME 3
+#define FINISH 4
+
+#define HS_LEN 3
+#define HS_MAX 999
+
+#define CH_HS_ADDR 0x00000000
+#define INT_HS_ADDR 0x0000100
+
+/* Game settings */
 int current_screen = -1;
 int is_initialized = 0;
-char char_player_score[3];
-char char_high_score[3];
+char char_player_score[HS_LEN];
+char char_high_score[HS_LEN];
 int counter = 36;
 
-/* Game Variables */
+/* Game variables */
 int high_score = 0;
 int player_score;
 int invincible = 0;
@@ -33,14 +45,15 @@ Shot shot_array[MAX_AMMO];
 Rock r;
 // Rock rock_array[MAX_ROCK];
 
-/* Initialize Controls */
+/* Initialize controls */
 void init() {
     init_input();
     init_pin();
     srand(seed());
 
     i2c_init();
-    read_data(0, char_high_score, 3);
+    read_int(INT_HS_ADDR, &high_score);
+    to_char(high_score, char_high_score);
 
     init_display();
     init_timer(2);
@@ -83,26 +96,24 @@ void setup(void) {
 void player_input(Object* o) {
     potentio_move(o);
 
-        if (get_btn(4))
-                move(o, RIGHT);
-        if (get_btn(3))
-                move(o, LEFT);
+    if (get_btn(4)) move(o, RIGHT);
+    if (get_btn(3)) move(o, LEFT);
 }
 
 void menu_screen(void) {
     clear();
 
     print(0, 0, "HIGH SCORE:", 11);
-    print(90, 0, char_high_score, 3);
+    print(90, 0, char_high_score, HS_LEN);
     print(20, 1, "1: START", 8);
     print(20, 2, "2: INFO", 7);
     print(20, 3, "3: CREDITS", 10);
 
-    if (get_btn(1)) current_screen = 3;  // start
+    if (get_btn(1)) current_screen = GAME;
 
-    if (get_btn(2)) current_screen = 1;  // instructions
+    if (get_btn(2)) current_screen = INSTRUCTIONS;
 
-    if (get_btn(3)) current_screen = 2;  // credits
+    if (get_btn(3)) current_screen = CREDITS;
 }
 
 void instructions_screen(void) {
@@ -114,7 +125,7 @@ void instructions_screen(void) {
     print(30, 3, "4: MENU", 7);
     render();
 
-    if (get_btn(4)) current_screen = 0;  // menu
+    if (get_btn(4)) current_screen = MENU;
 }
 
 void credits_screen(void) {
@@ -126,7 +137,7 @@ void credits_screen(void) {
     print(30, 3, "4: MENU", 7);
     render();
 
-    if (get_btn(4)) current_screen = 0;  // menu
+    if (get_btn(4)) current_screen = MENU;
 }
 
 void score_update() {
@@ -135,8 +146,8 @@ void score_update() {
 }
 
 void increase_score() {
-    if (player_score + POINTS > 999)
-        player_score = 999;
+    if (player_score + POINTS > HS_MAX)
+        player_score = HS_MAX;
     else
         player_score += POINTS;
 }
@@ -147,7 +158,7 @@ void finished_screen() {
     if (player_score > high_score) {
         high_score = player_score;
         to_char(high_score, char_high_score);
-        write_data(0, char_high_score, 3);
+        write_int(INT_HS_ADDR, high_score);
     }
 
     print(20, 0, "Game over!", 10);
@@ -228,7 +239,7 @@ void shoot() {
 }
 
 void game_screen(void) {
-        if (!is_initialized) setup();
+    if (!is_initialized) setup();
 
     if (next_frame()) {
         if (check_ammo() > 0 && get_btn(2)) shoot();
@@ -266,28 +277,28 @@ void logo_screen(void) {
     for (i = 0; i < 512; i++) buffer[i] = logo[i];
 
     if (get_btn(4)) {
-        current_screen = 0;
+        current_screen = MENU;
         clear();
     }
 }
 
 void draw_display() {
-        switch (current_screen) {
-        case 0:
-                menu_screen();
-                break;
-        case 1:
-                instructions_screen();
-                break;
-        case 2:
-                credits_screen();
-                break;
-        case 3:
-                game_screen();
-                break;
-        case 4:
-                finished_screen();
-                break;
+    switch (current_screen) {
+        case MENU:
+            menu_screen();
+            break;
+        case INSTRUCTIONS:
+            instructions_screen();
+            break;
+        case CREDITS:
+            credits_screen();
+            break;
+        case GAME:
+            game_screen();
+            break;
+        case FINISH:
+            finished_screen();
+            break;
         default:
             logo_screen();
             break;
@@ -296,9 +307,9 @@ void draw_display() {
 }
 
 int main(void) {
-        init();
+    init();
 
-        while (1) draw_display();
+    while (1) draw_display();
 
-        return 0;
+    return 0;
 }

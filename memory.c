@@ -1,6 +1,9 @@
 #include "includes/memory.h"
 #include "includes/registers.h"
 
+#define WRITE 0xA0
+#define READ 0xA1
+
 /* Wait for I2C bus to become idle */
 void i2c_idle() {
     while (I2C1CON & 0x1F || I2C1STAT & (1 << 14))
@@ -59,41 +62,81 @@ void i2c_stop() {
     i2c_idle();
 }
 
-void write_data(short address, char* data, int i) {
+void write_int(short address, int data) {
     do {
         i2c_start();
-    } while (!i2c_send(0x50 << 1));
+    } while (!i2c_send(WRITE));
+
+    byte seg[] = {(data & 0xFF), ((data >> 8) & 0xFF), ((data >> 16) & 0xFF),
+                  ((data >> 24) & 0xFF)};
 
     i2c_send(address >> 8);
     i2c_send(address);
 
-    while (i > 0) {
-        i2c_send(*data);
-        data++;
-        i--;
-    }
+    int i;
+    for (i = 0; i < 4; i++) i2c_send(seg[i]);
 
     i2c_stop();
 }
 
-void read_data(short address, char* recv, int i) {
+void read_int(short address, int* recv) {
+    *recv = 0;
+
     do {
         i2c_start();
-    } while (!i2c_send(0x50 << 1));
+    } while (!i2c_send(WRITE));
 
     i2c_send(address >> 8);
     i2c_send(address);
 
     i2c_start();
-    i2c_send(0x50 << 1 | 1);
+    i2c_send(READ);
 
-    while (i + 1 > 0) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        *recv |= i2c_recv();
+        i2c_ack();
+    }
+
+    i2c_nack();
+    i2c_stop();
+}
+
+void write_char(short address, char* data, int len) {
+    do {
+        i2c_start();
+    } while (!i2c_send(WRITE));
+
+    i2c_send(address >> 8);
+    i2c_send(address);
+
+    while (len > 0) {
+        i2c_send(*data);
+        data++;
+        len--;
+    }
+
+    i2c_stop();
+}
+
+void read_char(short address, char* recv, int len) {
+    do {
+        i2c_start();
+    } while (!i2c_send(WRITE));
+
+    i2c_send(address >> 8);
+    i2c_send(address);
+
+    i2c_start();
+    i2c_send(READ);
+
+    while (len + 1 > 0) {
         *recv = i2c_recv();
         i2c_idle();
         i2c_ack();
 
         recv++;
-        i--;
+        len--;
     }
 
     *recv = i2c_recv();
