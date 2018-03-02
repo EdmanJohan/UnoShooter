@@ -53,6 +53,4 @@ int get_sw(int sw);
  */
 int get_btn(int btn);
 
-
-
 #endif  // _IO_H_

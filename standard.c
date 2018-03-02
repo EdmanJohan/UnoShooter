@@ -20,11 +20,9 @@ unsigned int seed() {
 }
 
 int randint(int min, int max) {
-    srand(seed());
-    int r = rand() % (max + 1);
-
-    if (r < min) r += min;
-    return r;
+    if (rand() % (max + 1) > min)
+        return rand() % (max + 1);
+    return rand() % (max + 1) + min;
 }
 
 float randfloat(float min, float max) {
@@ -42,7 +40,7 @@ char* to_char(int number, char* number_rep) {
         pos = pos / 10;
     } while (pos);
 
-    *memalloc = '\0';
+    *memalloc = 0;
 
     // Placing character representations on their positions
     do {

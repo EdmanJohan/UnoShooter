@@ -36,8 +36,8 @@ int player_score;
 int invincible = 0;
 int cooldown = 1;
 int shot_count = 0;
-int player_health = 3;
-int ammo = 3;
+int player_health = MAX_HEALTH;
+int ammo = MAX_AMMO;
 
 /* Objects */
 Player p;
@@ -53,6 +53,7 @@ void init() {
 
     i2c_init();
     read_int(INT_HS_ADDR, &high_score);
+    // high_score = 0; //reset high score if uncommented
     to_char(high_score, char_high_score);
 
     init_display();

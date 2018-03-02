@@ -20,6 +20,4 @@ void potentio_move(Object* o);
 
 void draw_borders();
 
-void menu_screen();
-
 #endif // _DISPLAY_UI_H_

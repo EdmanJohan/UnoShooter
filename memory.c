@@ -6,8 +6,7 @@
 
 /* Wait for I2C bus to become idle */
 void i2c_idle() {
-    while (I2C1CON & 0x1F || I2C1STAT & (1 << 14))
-        ;  // TRSTAT
+    while (I2C1CON & 0x1F || I2C1STAT & (1 << 14));  // TRSTAT
 }
 
 /* Send one byte on I2C bus, return ack/nack status of transaction */

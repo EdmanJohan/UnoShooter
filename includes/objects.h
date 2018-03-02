@@ -27,7 +27,6 @@ void object_update(Object *object);
 /* === MOVE === */
 void object_move(Object *object);
 
-
 int check_collision(Object o1, Object o2);
 
 int within_screen(Object *object);
