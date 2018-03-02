@@ -27,9 +27,9 @@ void i2c_restart();
 /* Send stop conditon on the bus */
 void i2c_stop();
 
-void write_data(unsigned short address, char* data, int i);
+void write_data(short address, char* data, int i);
 
-void read_data(unsigned short addr, char* rec, int i);
+void read_data(short addr, char* recv, int i);
 
 /* Set up i2c */
 void i2c_init();
