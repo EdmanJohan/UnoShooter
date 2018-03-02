@@ -48,9 +48,9 @@ void potentio_move(Object* o) {
 }
 
 void draw_borders() {
-    int i;
-    for (i = 0; i < HEIGHT; i++) set_pixel(i, WIDTH - 1);
-    for (i = 0; i < HEIGHT - 26; i++) set_pixel(i, 0);
-    for (i = 0; i < 9; i++) set_pixel(HEIGHT - 26, i);
-    for (i = HEIGHT - 26; i < HEIGHT; i++) set_pixel(i, 9);
+        int i;
+        for (i = 0; i < HEIGHT; i++) set_pixel(i, WIDTH - 1);
+        for (i = 0; i < HEIGHT - 26; i++) set_pixel(i, 0);
+        for (i = 0; i < 9; i++) set_pixel(HEIGHT - 26, i);
+        for (i = HEIGHT - 26; i < HEIGHT; i++) set_pixel(i, 9);
 }

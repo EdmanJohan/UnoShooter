@@ -6,6 +6,8 @@
 //#include <stdlib.h>
 
 /* === CONSTRUCTORS === */
+int rock_count = 0;
+int shot_count = 0;
 
 /* Player Constructor */
 Player player_new() {
@@ -72,7 +74,7 @@ Shot shot_new(Object p) {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 1, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 1, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
         int i, j;
@@ -97,7 +99,6 @@ void player_update(Object *p) {
         if (within_screen(p)) object_move(p);
         draw(*p, 1);
 }
-
 void object_update(Object *o) {
         draw(*o, 0);
         within_border(o);

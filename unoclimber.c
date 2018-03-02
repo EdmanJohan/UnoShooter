@@ -83,8 +83,10 @@ void setup(void) {
 void player_input(Object* o) {
     potentio_move(o);
 
-    if (get_btn(4)) move(o, RIGHT);
-    if (get_btn(3)) move(o, LEFT);
+        if (get_btn(4))
+                move(o, RIGHT);
+        if (get_btn(3))
+                move(o, LEFT);
 }
 
 void menu_screen(void) {
@@ -226,7 +228,7 @@ void shoot() {
 }
 
 void game_screen(void) {
-    if (!is_initialized) setup();
+        if (!is_initialized) setup();
 
     if (next_frame()) {
         if (check_ammo() > 0 && get_btn(2)) shoot();
@@ -270,22 +272,22 @@ void logo_screen(void) {
 }
 
 void draw_display() {
-    switch (current_screen) {
+        switch (current_screen) {
         case 0:
-            menu_screen();
-            break;
+                menu_screen();
+                break;
         case 1:
-            instructions_screen();
-            break;
+                instructions_screen();
+                break;
         case 2:
-            credits_screen();
-            break;
+                credits_screen();
+                break;
         case 3:
-            game_screen();
-            break;
+                game_screen();
+                break;
         case 4:
-            finished_screen();
-            break;
+                finished_screen();
+                break;
         default:
             logo_screen();
             break;
@@ -294,9 +296,9 @@ void draw_display() {
 }
 
 int main(void) {
-    init();
+        init();
 
-    while (1) draw_display();
+        while (1) draw_display();
 
-    return 0;
+        return 0;
 }
