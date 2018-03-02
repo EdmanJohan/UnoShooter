@@ -9,6 +9,7 @@ This is a repository for the IS1200 mini-project, for the course that ran in the
 This project is inspired by/a clone of *Asteroid Blaster*-themed games.
 
 The project Abstract can be viewed -> [Here](https://1drv.ms/w/s!AjLSPhbgWJ4G3Cp2gomkDkLhwmHV).
+
 The Infographic can be viewed -> [Here](https://edmanjohan.github.io/UnoShooter/export/UnoShooter-InfoGraphic.pdf).
 
 
