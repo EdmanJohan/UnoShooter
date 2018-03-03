@@ -6,21 +6,21 @@ highlighter:      rouge
 permalink:        pretty
 
 # Setup
-title:            UnoShooter
-tagline:          'An IS1200 Project'
-description:      'A 2D-sidescroller game developed on the ChipKit as a project for the course <a href="https://www.kth.se/student/kurser/kurs/IS1200?l=en" target="_blank">IS1200</a> @ <a href="https://kth.se" target="_blank">KTH</a>.'
-url:              https://edmanjohan.github.io/UnoShooter/
+title:            Hyde
+tagline:          'A Jekyll theme'
+description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
+url:              http://hyde.getpoole.com
 baseurl:          /
 
 author:
-  name:           'JEDMEX'
-  url:            https://edmanjohan.github.io/UnoShooter/
+  name:           'Mark Otto'
+  url:            https://twitter.com/mdo
 
 paginate:         5
 
 # Custom vars
 version:          2.1.0
-plugins:          [jekyll-paginate]
+gems: [jekyll-paginate]
 
 github:
-  repo:           https://github.com/EdmanJohan/UnoShooter
+  repo:           https://github.com/poole/hyde
