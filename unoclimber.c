@@ -242,6 +242,8 @@ void check_health() {
             invincible = 0;
             player_health--;
         }
+
+        r.is_alive = 0;
     }
 
     if (player_health == 3) {
