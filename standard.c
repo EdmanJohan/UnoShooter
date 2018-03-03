@@ -10,8 +10,10 @@ unsigned int seed() {
     for (; n > 0; n--) {
         /* Start sampling, wait until conversion is done */
         AD1CON1 |= (0x1 << 1);
-        while (!(AD1CON1 & (0x1 << 1))) seed ^= ADC1BUF0 + TMR2;
-        while (!(AD1CON1 & 0x1)) seed ^= ADC1BUF0 + TMR2;
+        while (!(AD1CON1 & (0x1 << 1)))
+            seed ^= ADC1BUF0 + TMR2;
+        while (!(AD1CON1 & 0x1))
+            seed ^= ADC1BUF0 + TMR2;
 
         /* Get the analog value */
         seed ^= ADC1BUF0 + TMR2;
@@ -20,9 +22,11 @@ unsigned int seed() {
 }
 
 int randint(int min, int max) {
-    if (rand() % (max + 1) > min)
-        return rand() % (max + 1);
-    return rand() % (max + 1) + min;
+    int r = rand() % (max + 1);
+    
+    if (r > min)
+        return r;
+    return r + min;
 }
 
 float randfloat(float min, float max) {
@@ -32,9 +36,9 @@ float randfloat(float min, float max) {
 char* to_char(int number, char* number_rep) {
     char const digit[] = "0123456789";
     char* memalloc = number_rep;
-    int pos = 100; // Max number 999
+    int pos = 100;  // Max number 999
 
-    // Allocating memory 
+    // Allocating memory
     do {
         ++memalloc;
         pos = pos / 10;

@@ -4,7 +4,7 @@ typedef int objectPointer[10][10];
 
 typedef struct Object {
     float posX, posY, size, velX, velY;
-    int is_alive;
+    int is_alive, radius;
     objectPointer objForm;
 } Object, Player, Rock, Shot;
 

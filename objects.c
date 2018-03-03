@@ -18,6 +18,7 @@ Player player_new() {
     p.velY = 1;
     p.size = 10;
     p.is_alive = 1;
+    p.radius = 5;
 
     const int p_shape[10][10] = {
         {1, 1, 0, 0, 1, 1, 0, 0, 1, 1}, {1, 1, 1, 0, 1, 1, 0, 1, 1, 1},
@@ -43,6 +44,7 @@ Rock rock_new() {
     r.velX = -randfloat(0.5, 1.2);
     r.velY = 0;
     r.is_alive = 1;
+    r.radius = 4;
 
     const int r_shape[10][10] = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -68,6 +70,7 @@ Shot shot_new(Object p) {
     s.velY = 0;
     s.size = 10;
     s.is_alive = 1;
+    s.radius = 2;
 
     int s_shape[10][10] = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -122,5 +125,5 @@ int within_screen(Object *o) {
 }
 
 int check_collision(Object dis, Object dat) {
-    return dist(dis.posX, dis.posY, dat.posX, dat.posY) < 5;
+    return dist(dis.posX, dis.posY, dat.posX, dat.posY) < dis.radius;
 }

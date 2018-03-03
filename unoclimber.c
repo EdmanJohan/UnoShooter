@@ -12,32 +12,38 @@
 #define POINTS 5
 
 #define MENU 0
-#define INSTRUCTIONS 1
-#define CREDITS 2
+#define CREDITS 1
+#define HIGH_SCORE 2
 #define GAME 3
 #define FINISH 4
 
 #define HS_LEN 3
 #define HS_MAX 999
 
-#define CH_HS_ADDR 0x00000000
-#define INT_HS_ADDR 0x0000100
+#define FI_ADDR 0x0001000
+#define SE_ADDR 0x0002000
+#define TH_ADDR 0x0003000
 
 /* Game settings */
 int current_screen = -1;
 int is_initialized = 0;
 char char_player_score[HS_LEN];
-char char_high_score[HS_LEN];
+char char_first_place[HS_LEN];
+char char_second_place[HS_LEN];
+char char_third_place[HS_LEN];
 int counter = 36;
 
 /* Game variables */
-int high_score = 0;
+int first_place;
+int second_place;
+int third_place;
 int player_score;
-int invincible = 0;
+int invincible;
+int shot_count;
 int cooldown = 1;
-int shot_count = 0;
 int player_health = MAX_HEALTH;
 int ammo = MAX_AMMO;
+int high_score_update;
 
 /* Objects */
 Player p;
@@ -52,19 +58,30 @@ void init() {
     srand(seed());
 
     i2c_init();
-    read_int(INT_HS_ADDR, &high_score);
-    // high_score = 0; //reset high score if uncommented
-    to_char(high_score, char_high_score);
+
+    if (get_sw(1)) {
+        write_int(FI_ADDR, 0);
+        write_int(SE_ADDR, 0);
+        write_int(TH_ADDR, 0);
+    }
+
+    read_int(FI_ADDR, &first_place);
+    read_int(SE_ADDR, &second_place);
+    read_int(TH_ADDR, &third_place);
 
     init_display();
     init_timer(2);
     init_timer(3);
+
+    start_timer(2);
+    start_timer(3);
 }
 
 void spawn_object(char c) {
     switch (c) {
         case 'r':
-            if (!r.is_alive) r = rock_new();
+            if (!r.is_alive)
+                r = rock_new();
             break;
         case 's':
             shot_count %= MAX_AMMO;
@@ -81,10 +98,12 @@ void setup(void) {
     player_health = MAX_HEALTH;
     player_score = 0;
     shot_count = 0;
+    high_score_update = 0;
     // rock_count = 0;
 
     int i;
-    for (i = 0; i < 4; i++) char_player_score[i] = 0;
+    for (i = 0; i < 4; i++)
+        char_player_score[i] = 0;
 
     p = player_new();
 
@@ -97,39 +116,27 @@ void setup(void) {
 void player_input(Object* o) {
     potentio_move(o);
 
-    if (get_btn(4)) move(o, RIGHT);
-    if (get_btn(3)) move(o, LEFT);
+    if (get_btn(4))
+        move(o, RIGHT);
+    if (get_btn(3))
+        move(o, LEFT);
 }
 
 void menu_screen(void) {
     clear();
 
-    if (get_sw(1))
-        write_int(INT_HS_ADDR, 0);
+    print(10, 0, "1: START", 8);
+    print(10, 1, "2: CREDITS", 10);
+    print(10, 2, "3: HIGH SCORE", 13);
 
-    print(0, 0, "HIGH SCORE:", 11);
-    print(90, 0, char_high_score, HS_LEN);
-    print(20, 1, "1: START", 8);
-    print(20, 2, "2: INFO", 7);
-    print(20, 3, "3: CREDITS", 10);
+    if (get_btn(1))
+        current_screen = GAME;
 
-    if (get_btn(1)) current_screen = GAME;
+    if (get_btn(2))
+        current_screen = CREDITS;
 
-    if (get_btn(2)) current_screen = INSTRUCTIONS;
-
-    if (get_btn(3)) current_screen = CREDITS;
-}
-
-void instructions_screen(void) {
-    clear();
-
-    print(6, 0, "AVOID OR SHOOT", 14);
-    print(14, 1, "THE ROCKS TO", 12);
-    print(20, 2, "STAY ALIVE!", 11);
-    print(30, 3, "4: MENU", 7);
-    render();
-
-    if (get_btn(4)) current_screen = MENU;
+    if (get_btn(3))
+        current_screen = HIGH_SCORE;
 }
 
 void credits_screen(void) {
@@ -141,7 +148,8 @@ void credits_screen(void) {
     print(30, 3, "4: MENU", 7);
     render();
 
-    if (get_btn(4)) current_screen = MENU;
+    if (get_btn(4))
+        current_screen = MENU;
 }
 
 void score_update() {
@@ -156,13 +164,60 @@ void increase_score() {
         player_score += POINTS;
 }
 
+void high_score_screen(void) {
+    clear();
+
+    to_char(first_place, char_first_place);
+    to_char(second_place, char_second_place);
+    to_char(third_place, char_third_place);
+
+    print(0, 0, "1. ", 3);
+    print(16, 0, char_first_place, 3);
+
+    print(0, 1, "2. ", 3);
+    print(16, 1, char_second_place, 3);
+
+    print(0, 2, "3. ", 3);
+    print(16, 2, char_third_place, 3);
+
+    print(0, 3, "4: MENU", 7);
+    render();
+
+    if (get_btn(4))
+        current_screen = MENU;
+}
+
 void finished_screen() {
     clear();
-    
-    if (player_score > high_score) {
-        high_score = player_score;
-        to_char(high_score, char_high_score);
-        write_int(INT_HS_ADDR, high_score);
+
+    if (!high_score_update) {
+        if (player_score >= first_place) {
+            third_place = second_place;
+            second_place = first_place;
+            first_place = player_score;
+
+            write_int(TH_ADDR, third_place);
+            write_int(SE_ADDR, second_place);
+            write_int(FI_ADDR, first_place);
+
+        }
+
+        else if (player_score >= second_place) {
+            third_place = second_place;
+            second_place = player_score;
+
+            write_int(TH_ADDR, third_place);
+            write_int(SE_ADDR, second_place);
+
+        }
+
+        else if (player_score >= third_place) {
+            third_place = player_score;
+
+            write_int(TH_ADDR, third_place);
+        }
+
+        high_score_update = 1;
     }
 
     print(20, 0, "Game over!", 10);
@@ -171,7 +226,7 @@ void finished_screen() {
     print(20, 3, "Press BTN4", 11);
 
     if (get_btn(4)) {
-        current_screen = 0;
+        current_screen = MENU;
         is_initialized = 0;
     }
 }
@@ -208,7 +263,8 @@ int check_ammo() {
 
     int i;
     for (i = 0; i < MAX_AMMO; i++)
-        if (!shot_array[i].is_alive) count++;
+        if (!shot_array[i].is_alive)
+            count++;
 
     if (count == 3) {
         set_led(3, SET);
@@ -243,13 +299,16 @@ void shoot() {
 }
 
 void game_screen(void) {
-    if (!is_initialized) setup();
+    if (!is_initialized)
+        setup();
 
     if (next_frame()) {
-        if (check_ammo() > 0 && get_btn(2)) shoot();
+        if (check_ammo() > 0 && get_btn(2))
+            shoot();
         check_health();
 
-        if (TMR2 % 5 == 0) spawn_object('r');
+        if (TMR2 % 5 == 0)
+            spawn_object('r');
 
         if (!p.is_alive) {
             r.is_alive = 0;
@@ -278,7 +337,8 @@ void game_screen(void) {
 
 void logo_screen(void) {
     int i;
-    for (i = 0; i < 512; i++) buffer[i] = logo[i];
+    for (i = 0; i < 512; i++)
+        buffer[i] = logo[i];
 
     if (get_btn(4)) {
         current_screen = MENU;
@@ -291,8 +351,8 @@ void draw_display() {
         case MENU:
             menu_screen();
             break;
-        case INSTRUCTIONS:
-            instructions_screen();
+        case HIGH_SCORE:
+            high_score_screen();
             break;
         case CREDITS:
             credits_screen();
@@ -313,7 +373,8 @@ void draw_display() {
 int main(void) {
     init();
 
-    while (1) draw_display();
+    while (1)
+        draw_display();
 
     return 0;
 }
