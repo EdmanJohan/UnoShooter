@@ -73,7 +73,7 @@ void write_int(short address, int data) {
     i2c_send(address);
 
     int i;
-    for (i = 0; i < 4; i++) i2c_send(seg[i]);
+    for (i = 0; i < sizeof(int); i++) i2c_send(seg[i]);
 
     i2c_stop();
 }
@@ -92,7 +92,7 @@ void read_int(short address, int* recv) {
     i2c_send(READ);
 
     int i;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < sizeof(int); i++) {
         *recv |= i2c_recv();
         i2c_ack();
     }
@@ -109,7 +109,7 @@ void write_char(short address, char* data, int len) {
     i2c_send(address >> 8);
     i2c_send(address);
 
-    while (len > 0) {
+    while (len >= 0) {
         i2c_send(*data);
         data++;
         len--;
@@ -129,16 +129,14 @@ void read_char(short address, char* recv, int len) {
     i2c_start();
     i2c_send(READ);
 
-    while (len + 1 > 0) {
+    while (len >= 0) {
         *recv = i2c_recv();
-        i2c_idle();
         i2c_ack();
 
         recv++;
         len--;
-    }
+    } 
 
-    *recv = i2c_recv();
     i2c_nack();
     i2c_stop();
 }
@@ -153,5 +151,4 @@ void i2c_init() {
     I2C1CONSET = 1 << 13;  // SIDL = 1
     I2C1CONSET = 1 << 15;  // ON = 1
 
-    // write_data(0x1234, 0, 1);
 }

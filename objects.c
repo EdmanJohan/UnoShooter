@@ -120,7 +120,7 @@ void within_border(Object *o) {
 /* Check if within screen */
 int within_screen(Object *o) {
     return (o->posX > 0 && o->posX < (128 - o->size) &&
-            (o->posY + o->velY) > 0 && (o->posY + o->size + o->velY) < 32);
+            (o->posY + o->velY) > 1 && (o->posY + o->size + o->velY) < 31);
 }
 
 int check_collision(Object dis, Object dat) {

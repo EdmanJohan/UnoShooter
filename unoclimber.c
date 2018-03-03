@@ -155,7 +155,7 @@ void increase_score() {
 
 void finished_screen() {
     clear();
-
+    
     if (player_score > high_score) {
         high_score = player_score;
         to_char(high_score, char_high_score);
