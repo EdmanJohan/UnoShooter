@@ -1,1 +1,26 @@
-theme: jekyll-theme-minimal
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            UnoShooter
+tagline:          'An IS1200 Project'
+description:      'A 2D-sidescroller game developed on the ChipKit as a project for the course <a href="https://www.kth.se/student/kurser/kurs/IS1200?l=en" target="_blank">IS1200</a> @ <a href="https://kth.se" target="_blank">KTH</a>.'
+url:              https://edmanjohan.github.io/UnoShooter/
+baseurl:          /
+
+author:
+  name:           'JEDMEX'
+  url:            https://edmanjohan.github.io/UnoShooter/
+
+paginate:         5
+
+# Custom vars
+version:          2.1.0
+plugins:          [jekyll-paginate]
+
+github:
+  repo:           https://github.com/EdmanJohan/UnoShooter
