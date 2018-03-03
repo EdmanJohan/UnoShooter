@@ -23,7 +23,7 @@ void draw(Object o, int draw) {
 }
 
 void move(Object* o, int dir) {
-    draw(*o, SET);
+    draw(*o, CLR);
 
     switch (dir) {
         case LEFT:  // UP

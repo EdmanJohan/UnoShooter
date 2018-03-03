@@ -39,7 +39,7 @@ Rock rock_new() {
     Rock r;
     r.size = 10;
     r.posX = randint(120, 130);
-    r.posY = randint(5, 30 - r.size);  // fixes ghost error?
+    r.posY = randint(5, 30 - r.size);
     r.velX = -randfloat(0.5, 1.2);
     r.velY = 0;
     r.is_alive = 1;
@@ -94,10 +94,8 @@ void object_move(Object *o) {
 
 /* === UPDATE === */
 void player_update(Object *p) {
-    draw(*p, 0);
-
     if (within_screen(p)) object_move(p);
-    draw(*p, 1);
+    draw(*p, SET);
 }
 void object_update(Object *o) {
     draw(*o, 0);

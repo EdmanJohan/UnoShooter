@@ -104,6 +104,9 @@ void player_input(Object* o) {
 void menu_screen(void) {
     clear();
 
+    if (get_sw(1))
+        write_int(INT_HS_ADDR, 0);
+
     print(0, 0, "HIGH SCORE:", 11);
     print(90, 0, char_high_score, HS_LEN);
     print(20, 1, "1: START", 8);
