@@ -10,7 +10,6 @@ title:            UnoShooter
 tagline:          'An IS1200 Project'
 description:      'A 2D-sidescroller game developed on the ChipKit as a project for the course <a href="https://www.kth.se/student/kurser/kurs/IS1200?l=en" target="_blank">IS1200</a> @ <a href="https://kth.se" target="_blank">KTH</a>.'
 url:              https://github.com/EdmanJohan/UnoShooter
-baseurl:          /
 
 author:
   name:           'JEDMEX'
