@@ -4,6 +4,7 @@
 #include "includes/io.h"
 #include "includes/registers.h"
 
+/* Sets a seed for the rand() function by using analogue inputs on the device */
 unsigned int seed() {
     int n = 8;
     unsigned int seed = n;
@@ -21,18 +22,21 @@ unsigned int seed() {
     return seed;
 }
 
+/* Returns a random integer between parameter min and max, inclusive. */
 int randint(int min, int max) {
     int r = rand() % (max + 1);
-    
+
     if (r > min)
         return r;
     return r + min;
 }
 
+/* Returns a random float between parameter min and max. */
 float randfloat(float min, float max) {
     return (((float)rand() / (float)RAND_MAX)) * (max - min) + min;
 }
 
+/* Converts an integer and stores it in a character array */
 void to_char(int number, char* number_rep) {
     char const digit[] = "0123456789";
     int pos = 100;  // Max number 999
@@ -52,6 +56,7 @@ void to_char(int number, char* number_rep) {
     } while (number);
 }
 
+/* Calculates the distance between to xy-positions. */
 int dist(float x1, float y1, float x2, float y2) {
     int dx = (int)(x2 - x1) * (x2 - x1);
     int dy = (int)(y2 - y1) * (y2 - y1);

@@ -15,57 +15,67 @@ byte buffer[TOTAL_PIXELS];
  * 128 x 32 resolution buffer.
  * @param x The x-value of the pixel.
  * @param y The y-value of the pixel.
+ * @author  Alex Diaz
  */
 void set_pixel(int x, int y, int state);
 
 
 /**
  * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
+ * Author: Alex Diaz, modified by Johan Edman
  */
 void init_timer(int timer);
 
 /**
- * Starts Timer2.
+ * Starts a Timer
+ * Author: Alex Diaz, modified by Johan Edman
  */
 void start_timer(int timer);
 
 /**
- * Stops Timer2.
+ * Stops a Timer.
+ * Author: Alex Diaz, modified by Johan Edman
  */
 void stop_timer(int timer);
 
 /**
  * Keeps the counter variable.
  * @return 1 is counter is full, else 0.
+ * @author Alex Diaz
  */
 int next_frame();
 
 /**
  * Simple delay function.
  * @param del Number of cycles to "stall".
+ * @author Alex Diaz
  */
 void delay(int del);
 
 /**
  * Initializes the SPI controller and the OLED display.
+ * @author Fredrik Lundevall
  */
 void init_display();
 
 /**
  * Pushes the display[] array to the SPI buffer to be rendered on the display.
+ * @author Fredrik Lundevall, modifed by Alex Diaz
  */
 void render();
 
 /**
  * Prints characters on the display.
- * @param x    [description]
- * @param y    [description]
- * @param data [description]
+ * @param x    Initial x-value position
+ * @param line Row position, 0 ... 3
+ * @param data The string to print
+ * @author Fredrik Lundevall, modified by Alex Diaz
  */
-void print(int x, int y, const char *data, const int len);
+void print(int x, int line, const char *data, const int len);
 
 /**
- * Fills the SPI buffer and the display[] array with 0s.
+ * Fills the display array with 0s.
+ * Author: Alex Diaz
  */
 void clear();
 
