@@ -7,7 +7,7 @@
 #include "includes/standard.h"
 
 #define MAX_AMMO 3
-#define MAX_ROCK 15
+#define MAX_ROCK 5
 #define MAX_HEALTH 3
 #define POINTS 5
 
@@ -38,7 +38,7 @@ char char_second_place[HS_LEN];
 char char_third_place[HS_LEN];
 
 int player_score, old_player_score;
-int shot_count;
+int shot_count, rock_count;
 int invincible, cooldown;
 int player_health;
 int ammo;
@@ -46,7 +46,7 @@ int ammo;
 /* Objects */
 Player p;
 Shot shot_array[MAX_AMMO];
-Rock r;
+Rock rock_array[MAX_ROCK];
 
 /* Initialize controls */
 void init() {
@@ -84,10 +84,14 @@ void setup(void) {
 
     invincible = 1;
     cooldown = 1;
+
     player_score = 0;
     old_player_score = 0;
+
     difficulty = 0;
     shot_count = 0;
+    rock_count = 0;
+
     hs_is_updated = 0;
 
     int i;
@@ -114,12 +118,14 @@ void player_input(Object* o) {
 void spawn_object(char c) {
     switch (c) {
         case 'r':
-            if (!r.is_alive)
-                r = rock_new();
+            rock_count %= (difficulty + 1);
+            if (!rock_array[rock_count].is_alive)
+                rock_array[rock_count] = rock_new();
+            rock_count++;
             break;
         case 's':
             shot_count %= MAX_AMMO;
-            if (shot_array[shot_count].is_alive != 1)
+            if (!shot_array[shot_count].is_alive)
                 shot_array[shot_count] = shot_new(p);
             shot_count++;
             break;
@@ -140,14 +146,14 @@ void increase_score() {
 
 void increase_difficulty() {
     if (player_score > old_player_score)
-        if (player_score % 50 == 0 && difficulty <= 3) {
+        if (player_score % 10 == 0 && difficulty < 5) {
             difficulty++;
             old_player_score = player_score;
         }
 }
 
-void check_health() {
-    if (check_collision(p, r)) {
+void check_health(int collision) {
+    if (collision) {
         if (IFS(0) & 0x9000) {
             invincible++;
             IFSCLR(0) = 0x9000;
@@ -157,8 +163,6 @@ void check_health() {
             invincible = 0;
             player_health--;
         }
-
-        r.is_alive = 0;
     }
 
     if (player_health == 3) {
@@ -252,29 +256,41 @@ void game_screen(void) {
             shoot();
 
         increase_difficulty();
-        check_health();
+        check_health(0);
 
         if (TMR2 % 5 == 0)
             spawn_object('r');
 
-        if (!p.is_alive) {
-            r.is_alive = 0;
-            stop_timer(2);
-            current_screen = 4;
-        }
-
         int i;
-        for (i = 0; i < MAX_AMMO; i++) {
-            if (shot_array[i].is_alive)
-                if (check_collision(shot_array[i], r)) {
-                    increase_score();
-                    shot_array[i].is_alive = 0;
-                    r.is_alive = 0;
-                }
-            object_update(&shot_array[i]);
+        if (!p.is_alive) {
+            for (i = 0; i < (difficulty + 1) % MAX_ROCK; i++)
+                rock_array[i].is_alive = 0;
+            stop_timer(2);
+            current_screen = FINISH;
         }
 
-        object_update(&r);
+        int j;
+        for (i = 0; i < (difficulty + 1) % MAX_ROCK; i++) {
+            if (rock_array[i].is_alive) {
+                if (check_collision(p, rock_array[i]))
+                    check_health(1);
+
+                for (j = 0; j < MAX_AMMO; j++)
+                    if (shot_array[j].is_alive)
+                        if (check_collision(shot_array[j], rock_array[i])) {
+                            increase_score();
+                            rock_array[i].is_alive = 0;
+                            shot_array[j].is_alive = 0;
+                        }
+            }
+        }
+
+        for (i = 0; i < MAX_AMMO; i++)
+            if (shot_array[i].is_alive)
+                object_update(&shot_array[i]);
+        for (i = 0; i < (difficulty + 1) % MAX_ROCK; i++)
+            if (rock_array[i].is_alive)
+                object_update(&rock_array[i]);
 
         draw_borders();
         score_update();
