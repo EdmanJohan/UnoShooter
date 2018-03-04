@@ -1,6 +1,9 @@
 #include "includes/io.h"
 #include "includes/registers.h"
 
+/**
+ * Initializes analogue pins and turns on ADC.
+ */
 void init_pin() {
         AD1PCFG = 0xFBFF;
         AD1CON1 = 4 << 8 | 7 << 5;
@@ -15,6 +18,7 @@ void init_pin() {
         AD1CON1SET = 1 << 15;
 }
 
+/** Initializes buttons and switches. */
 void init_input() {
         set_btn(1, SET);
         set_btn(2, SET);

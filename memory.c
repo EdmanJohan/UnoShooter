@@ -61,6 +61,11 @@ void i2c_stop() {
     i2c_idle();
 }
 
+/**
+ * Writes an integer to the EEPROM.
+ * @param address The 16-bit address to send to the EEPROM.
+ * @param data    The integer to send.
+ */
 void write_int(short address, int data) {
     do {
         i2c_start();
@@ -78,6 +83,11 @@ void write_int(short address, int data) {
     i2c_stop();
 }
 
+/**
+ * Reads an integer from the EEPROM.
+ * @param  address The 16-bit address to read from the EEPROM.
+ * @return         The integer.
+ */
 int read_int(short address) {
     int recv = 0;
 
@@ -103,6 +113,11 @@ int read_int(short address) {
     return recv;
 }
 
+/**
+ * Writes a character to the EEPROM.
+ * @param address The 16-bit address to send to the EEPROM.
+ * @param data    The character to send.
+ */
 void write_char(short address, char* data, int len) {
     do {
         i2c_start();
@@ -120,6 +135,11 @@ void write_char(short address, char* data, int len) {
     i2c_stop();
 }
 
+/**
+ * Reads a character from the EEPROM.
+ * @param address   The 16-bit address to read from the EEPROM.
+ * @return          The character.
+ */
 char* read_char(short address, int len) {
     char* recv;
 

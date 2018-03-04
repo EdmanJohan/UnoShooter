@@ -5,10 +5,14 @@
 #define SET 1
 #define INV 2
 
-
+/**
+ * Initializes analogue pins and turns on ADC.
+ */
 void init_pin();
 
+/** Initializes buttons and switches. */
 void init_input();
+
 /**
  * Sets state of LED light at specified position.
  * Will also modify whether input/output.

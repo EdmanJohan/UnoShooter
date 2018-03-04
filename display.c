@@ -192,11 +192,10 @@ void init_display() {
 }
 
 /**
- * Prints characters on the buffer.
- * @param x    [description]
- * @param y    [description]
- * @param data [description]
- * @param len
+ * Prints characters on the display.
+ * @param x    Initial x-value position
+ * @param line Row position, 0 ... 3
+ * @param data The string to print
  */
 void print(int x, int line, const char* string, const int len) {
     int i, j;

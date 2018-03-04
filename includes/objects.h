@@ -24,15 +24,19 @@ Shot shot_new(Object player);
 /* === UPDATE === */
 void player_update(Object *player);
 
+/* Updates the object. Toggles the Y-velocity if border hit.  */
 void object_update(Object *object);
 
 /* === MOVE === */
 void object_move(Object *object);
 
+/* Check if collision has happened by distance formula */
 int check_collision(Object o1, Object o2);
 
+/* Check if within screen */
 int within_screen(Object *object);
 
+/* Check if within game borders */
 void within_border(Object *object);
 
 #endif  // _OBJECT_H_

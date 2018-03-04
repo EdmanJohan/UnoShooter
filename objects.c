@@ -3,6 +3,8 @@
 #include "includes/display_ui.h"
 #include "includes/standard.h"
 
+/* === CONSTRUCTORS === */
+
 /* Player constructor */
 Player player_new() {
     Object p;
@@ -101,6 +103,8 @@ void player_update(Object *p) {
         object_move(p);
     draw(*p, SET);
 }
+
+/* Updates the object. Toggles the Y-velocity if border hit.  */
 void object_update(Object *o) {
     draw(*o, CLR);
     within_border(o);
@@ -128,6 +132,7 @@ int within_screen(Object *o) {
             (o->posY + o->velY) > 0 && (o->posY + o->size + o->velY) < 32);
 }
 
+/* Check if collision has happened by distance formula */
 int check_collision(Object dis, Object dat) {
     return dist(dis.posX, dis.posY, dat.posX, dat.posY) < dis.radius;
 }

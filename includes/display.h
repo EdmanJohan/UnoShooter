@@ -58,11 +58,11 @@ void render();
 
 /**
  * Prints characters on the display.
- * @param x    [description]
- * @param y    [description]
- * @param data [description]
+ * @param x    Initial x-value position
+ * @param line Row position, 0 ... 3
+ * @param data The string to print
  */
-void print(int x, int y, const char *data, const int len);
+void print(int x, int line, const char *data, const int len);
 
 /**
  * Fills the SPI buffer and the display[] array with 0s.
