@@ -28,7 +28,7 @@
 /* Game settings */
 int current_screen;
 int is_initialized;
-int hs_is_updated;
+int hs_is_updated, btn_is_pressed;
 
 /* Game variables */
 int first_place, second_place, third_place;
@@ -97,6 +97,7 @@ void setup(void) {
     set_led(8, SET);
 
     hs_is_updated = 0;
+    btn_is_pressed = 1;
 
     int i;
     for (i = 0; i < HS_LEN; i++)
@@ -398,11 +399,14 @@ void finished_screen(void) {
     print(76, 1, char_player_score, 3);
     print(20, 3, "Press BTN4", 11);
 
-    delay(99999);
-    if (get_btn(4)) {
-        current_screen = MENU;
-        is_initialized = 0;
-    }
+    if (!get_btn(4))
+        btn_is_pressed = 0;
+
+    if (!btn_is_pressed)
+        if (get_btn(4)) {
+            current_screen = MENU;
+            is_initialized = 0;
+        }
 }
 
 void draw_display(void) {
