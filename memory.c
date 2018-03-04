@@ -4,12 +4,17 @@
 #define WRITE 0xA0
 #define READ 0xA1
 
-/* Wait for I2C bus to become idle */
+/* Wait for I2C bus to become idle
+ * Author: h4xxel
+*/
 void i2c_idle() {
-    while (I2C1CON & 0x1F || I2C1STAT & (1 << 14));  // TRSTAT
+    while (I2C1CON & 0x1F || I2C1STAT & (1 << 14))
+        ;  // TRSTAT
 }
 
-/* Send one byte on I2C bus, return ack/nack status of transaction */
+/* Send one byte on I2C bus, return ack/nack status of transaction
+ * Author: h4xxel
+ */
 int i2c_send(byte data) {
     i2c_idle();
     I2C1TRN = data & 0xFF;
@@ -17,7 +22,9 @@ int i2c_send(byte data) {
     return !(I2C1STAT & (1 << 15));  // ACKSTAT
 }
 
-/* Receive one byte from I2C bus */
+/* Receive one byte from I2C bus
+ * Author: h4xxel
+ */
 byte i2c_recv() {
     i2c_idle();
     I2C1CONSET = 1 << 3;  // RCEN = 1
@@ -26,35 +33,45 @@ byte i2c_recv() {
     return I2C1RCV;
 }
 
-/* Send acknowledge conditon on the bus */
+/* Send acknowledge conditon on the bus 
+ * Author: h4xxel 
+ */
 void i2c_ack() {
     i2c_idle();
     I2C1CONCLR = 1 << 5;  // ACKDT = 0
     I2C1CONSET = 1 << 4;  // ACKEN = 1
 }
 
-/* Send not-acknowledge conditon on the bus */
+/* Send not-acknowledge conditon on the bus 
+ * Author: h4xxel 
+ */
 void i2c_nack() {
-    i2c_idle(); 
+    i2c_idle();
     I2C1CONSET = 1 << 5;  // ACKDT = 1
     I2C1CONSET = 1 << 4;  // ACKEN = 1
 }
 
-/* Send start conditon on the bus */
+/* Send start conditon on the bus 
+ * Author: h4xxel 
+ */
 void i2c_start() {
     i2c_idle();
     I2C1CONSET = 1;  // SEN
     i2c_idle();
 }
 
-/* Send restart conditon on the bus */
+/* Send restart conditon on the bus 
+ * Author: h4xxel 
+ */
 void i2c_restart() {
     i2c_idle();
     I2C1CONSET = 1 << 1;  // RSEN
     i2c_idle();
 }
 
-/* Send stop conditon on the bus */
+/* Send stop conditon on the bus 
+ * Author: h4xxel  
+ */
 void i2c_stop() {
     i2c_idle();
     I2C1CONSET = 1 << 2;  // PEN
@@ -65,6 +82,7 @@ void i2c_stop() {
  * Writes an integer to the EEPROM.
  * @param address The 16-bit address to send to the EEPROM.
  * @param data    The integer to send.
+ * @author        Alex Diaz
  */
 void write_int(short address, int data) {
     do {
@@ -78,7 +96,8 @@ void write_int(short address, int data) {
     i2c_send(address);
 
     int i;
-    for (i = 0; i < sizeof(int); i++) i2c_send(seg[i]);
+    for (i = 0; i < sizeof(int); i++)
+        i2c_send(seg[i]);
 
     i2c_stop();
 }
@@ -87,6 +106,7 @@ void write_int(short address, int data) {
  * Reads an integer from the EEPROM.
  * @param  address The 16-bit address to read from the EEPROM.
  * @return         The integer.
+ * @author         Alex Diaz
  */
 int read_int(short address) {
     int recv = 0;
@@ -117,6 +137,7 @@ int read_int(short address) {
  * Writes a character to the EEPROM.
  * @param address The 16-bit address to send to the EEPROM.
  * @param data    The character to send.
+ * @author        Alex Diaz
  */
 void write_char(short address, char* data, int len) {
     do {
@@ -139,6 +160,7 @@ void write_char(short address, char* data, int len) {
  * Reads a character from the EEPROM.
  * @param address   The 16-bit address to read from the EEPROM.
  * @return          The character.
+ * @author          Alex Diaz
  */
 char* read_char(short address, int len) {
     char* recv;
@@ -159,7 +181,7 @@ char* read_char(short address, int len) {
 
         recv++;
         len--;
-    } 
+    }
 
     i2c_nack();
     i2c_stop();
@@ -176,5 +198,4 @@ void i2c_init() {
     I2C1STAT = 0x0;
     I2C1CONSET = 1 << 13;  // SIDL = 1
     I2C1CONSET = 1 << 15;  // ON = 1
-
 }

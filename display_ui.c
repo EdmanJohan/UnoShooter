@@ -13,6 +13,7 @@
  * Draws an object on the display
  * @param o    Object to draw
  * @param draw Draws if SET, erases if CLR
+ * @author Alex Diaz, Johan Edman
  */
 void draw(Object o, int draw) {
     int i, j;
@@ -31,6 +32,7 @@ void draw(Object o, int draw) {
  * Moves an object
  * @param o   The object to move
  * @param dir UP, DOWN, LEFT or RIGHT
+ * @author    Alex Diaz, Johan Edman
  */
 void move(Object* o, int dir) {
     draw(*o, CLR);
@@ -51,6 +53,7 @@ void move(Object* o, int dir) {
 /**
  * Enables the use of the potentiometer to adjust x-position.
  * @param The object to move.
+ * @author Alex Diaz
  */
 void potentio_move(Object* o) {
     AD1CON1SET = 1 << 1;
@@ -65,7 +68,10 @@ void potentio_move(Object* o) {
     draw(*o, SET);
 }
 
-/** Draws borders on the display */
+/** 
+ * Draws borders on the display 
+ * Author: Alex Diaz
+ */
 void draw_borders() {
     int i;
     for (i = 0; i < HEIGHT; i++) set_pixel(i, WIDTH - 1, SET);
