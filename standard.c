@@ -33,26 +33,23 @@ float randfloat(float min, float max) {
     return (((float)rand() / (float)RAND_MAX)) * (max - min) + min;
 }
 
-char* to_char(int number, char* number_rep) {
+void to_char(int number, char* number_rep) {
     char const digit[] = "0123456789";
-    char* memalloc = number_rep;
     int pos = 100;  // Max number 999
 
     // Allocating memory
     do {
-        ++memalloc;
+        ++number_rep;
         pos = pos / 10;
     } while (pos);
 
-    *memalloc = 0;
+    *number_rep = 0;
 
     // Placing character representations on their positions
     do {
-        *--memalloc = digit[number % 10];
+        *--number_rep = digit[number % 10];
         number /= 10;
     } while (number);
-
-    return number_rep;
 }
 
 int dist(float x1, float y1, float x2, float y2) {

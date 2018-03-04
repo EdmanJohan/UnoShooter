@@ -29,11 +29,11 @@ void i2c_stop();
 
 void write_int(short address, int data);
 
-void read_int(short address, int* recv);
+int read_int(short address);
 
 void write_char(short address, char* data, int len);
 
-void read_char(short address, char* recv, int len);
+char* read_char(short address, int len);
 
 /* Set up i2c */
 void i2c_init();

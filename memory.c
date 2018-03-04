@@ -35,7 +35,7 @@ void i2c_ack() {
 
 /* Send not-acknowledge conditon on the bus */
 void i2c_nack() {
-    i2c_idle();
+    i2c_idle(); 
     I2C1CONSET = 1 << 5;  // ACKDT = 1
     I2C1CONSET = 1 << 4;  // ACKEN = 1
 }
@@ -78,8 +78,8 @@ void write_int(short address, int data) {
     i2c_stop();
 }
 
-void read_int(short address, int* recv) {
-    *recv = 0;
+int read_int(short address) {
+    int recv = 0;
 
     do {
         i2c_start();
@@ -93,12 +93,14 @@ void read_int(short address, int* recv) {
 
     int i;
     for (i = 0; i < sizeof(int); i++) {
-        *recv |= i2c_recv();
+        recv |= i2c_recv();
         i2c_ack();
     }
 
     i2c_nack();
     i2c_stop();
+
+    return recv;
 }
 
 void write_char(short address, char* data, int len) {
@@ -118,7 +120,9 @@ void write_char(short address, char* data, int len) {
     i2c_stop();
 }
 
-void read_char(short address, char* recv, int len) {
+char* read_char(short address, int len) {
+    char* recv;
+
     do {
         i2c_start();
     } while (!i2c_send(WRITE));
@@ -139,6 +143,8 @@ void read_char(short address, char* recv, int len) {
 
     i2c_nack();
     i2c_stop();
+
+    return recv;
 }
 
 /* Set up i2c */

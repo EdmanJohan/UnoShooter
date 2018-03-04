@@ -9,7 +9,7 @@ float randfloat(float min, float max);
 
 unsigned int seed();
 
-char* to_char(int number, char number_rep[]);
+void to_char(int number, char* number_rep);
 
 int dist(float x1, float y1, float x2, float y2);
 

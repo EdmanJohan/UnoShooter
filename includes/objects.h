@@ -8,6 +8,8 @@ typedef struct Object {
     objectPointer objForm;
 } Object, Player, Rock, Shot;
 
+int difficulty;
+
 /* === CONSTRUCTORS === */
 
 /* Player Constructor */
