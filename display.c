@@ -19,6 +19,7 @@ static int counter = 0;
 /**
  * Simple delay function.
  * @param del Number of cycles to "stall".
+ * @author Alex Diaz
  */
 void delay(int del) {
     int i;
@@ -30,6 +31,7 @@ void delay(int del) {
  * 128 x 32 resolution buffer.
  * @param x The x-value of the pixel.
  * @param y The y-value of the pixel.
+ * @author  Alex Diaz
  */
 void set_pixel(int x, int y, int state) {
     int i = y / PIXEL_UNIT;
@@ -42,6 +44,7 @@ void set_pixel(int x, int y, int state) {
 
 /**
  * Initializes Timer2 with 1:256 pre-scaling, at 1 s.
+ * Author: Alex Diaz, modified by Johan Edman
  */
 void init_timer(int t) {
     switch (t) {
@@ -69,7 +72,8 @@ void init_timer(int t) {
 }
 
 /**
- * Starts Timer2.
+ * Starts a Timer
+ * Author: Alex Diaz, modified by Johan Edman
  */
 void start_timer(int t) {
     switch (t) {
@@ -83,7 +87,8 @@ void start_timer(int t) {
 }
 
 /**
- * Stops Timer2.
+ * Stops a Timer.
+ * Author: Alex Diaz, modified by Johan Edman
  */
 void stop_timer(int t) {
     switch (t) {
@@ -96,6 +101,11 @@ void stop_timer(int t) {
     }
 }
 
+/**
+ * Keeps the counter variable.
+ * @return 1 is counter is full, else 0.
+ * @author Alex Diaz
+ */
 int next_frame() {
     if (counter > 10) {
         counter = 0;
@@ -116,6 +126,7 @@ int next_frame() {
  * the buffer SPI2BUF if empty.
  * @param  data     Hexadecimal SPI command
  * @return          SPI buffer
+ * @author          Fredrik Lundevall
  */
 byte spi_setbyte(byte data) {
     while (!(SPI2STAT & 0x08))  // SPI2TXB
@@ -128,6 +139,7 @@ byte spi_setbyte(byte data) {
 
 /**
  * Initializes host SPI interface for the Basic I/O Shield.
+ * Author: Fredrik Lundevall
  */
 void init_spi() {
     // SET PERIPHERAL BUS CLOCK
@@ -158,6 +170,7 @@ void init_spi() {
 
 /**
  * Initializes the SPI controller and the Basic I/O Shield OLED buffer.
+ * Author: Fredrik Lundevall
  */
 void init_display() {
     init_spi();
@@ -196,6 +209,7 @@ void init_display() {
  * @param x    Initial x-value position
  * @param line Row position, 0 ... 3
  * @param data The string to print
+ * @author Fredrik Lundevall, modified by Alex Diaz
  */
 void print(int x, int line, const char* string, const int len) {
     int i, j;
@@ -209,6 +223,7 @@ void print(int x, int line, const char* string, const int len) {
 /**
  * Pushes the buffer[] array to the SPI buffer to be rendered on the buffer,
  * page by page.
+ * Author: Fredrik Lundevall, modified by Alex Diaz
  */
 void render() {
     int i, j;
@@ -227,7 +242,8 @@ void render() {
 }
 
 /**
- * Fills the buffer array with 0s.
+ * Fills the display array with 0s.
+ * Author: Alex Diaz
  */
 void clear() {
     int i;
