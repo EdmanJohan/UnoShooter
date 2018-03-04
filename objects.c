@@ -6,6 +6,7 @@
 /* === CONSTRUCTORS === */
 
 /* Player constructor */
+/*  @author Johan Edman */
 Player player_new() {
         Object p;
         p.posX = 10;
@@ -33,6 +34,7 @@ Player player_new() {
 }
 
 /* Rock constructor */
+/*  @author Johan Edman */
 Rock rock_new() {
         Rock r;
         r.size = 10;
@@ -63,6 +65,7 @@ Rock rock_new() {
 }
 
 /* Shot constructor */
+/*  @author Johan Edman */
 Shot shot_new(Object p) {
         Shot s;
         s.posX = p.posX;
@@ -92,19 +95,24 @@ Shot shot_new(Object p) {
 /* === MOVE === */
 
 /* Object movement */
+/*  @author Johan Edman */
 void object_move(Object *o) {
         o->posX += o->velX;
         o->posY += o->velY;
 }
 
 /* === UPDATE === */
+
+/* Player Update - Check if within screen */
+/*  @author Johan Edman */
 void player_update(Object *p) {
         if (within_screen(p))
                 object_move(p);
         draw(*p, SET);
 }
 
-/* Updates the object. Toggles the Y-velocity if border hit.  */
+/* Updates the object. Inverts the Y-velocity if border hit.  */
+/*  @author Johan Edman */
 void object_update(Object *o) {
         draw(*o, CLR);
         within_border(o);
@@ -121,18 +129,21 @@ void object_update(Object *o) {
 }
 
 /* Check if within game borders */
+/*  @author Johan Edman */
 void within_border(Object *o) {
         if (o->posX < 0 || o->posX > 150 || o->posY < 0 || o->posY > 31)
                 o->is_alive = 0;
 }
 
 /* Check if within screen */
+/*  @author Johan Edman */
 int within_screen(Object *o) {
         return (o->posX > 0 && o->posX < (128 - o->size) &&
                 (o->posY + o->velY) > 0 && (o->posY + o->size + o->velY) < 32);
 }
 
 /* Check if collision has happened by distance formula */
+/*  @author Johan Edman */
 int check_collision(Object dis, Object dat) {
         return dist(dis.posX, dis.posY, dat.posX, dat.posY) < dis.radius;
 }

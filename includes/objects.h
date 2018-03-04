@@ -1,7 +1,11 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
+
+/* Contains Shape of Object */
+/*  @author Johan Edman */
 typedef int objectPointer[10][10];
 
+/*  @author Alex Diaz - Tweaked by Johan Edman*/
 typedef struct Object {
     float posX, posY, size, velX, velY;
     int is_alive, radius;
