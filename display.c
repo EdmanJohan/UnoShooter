@@ -201,7 +201,7 @@ void init_display() {
 void print(int x, int line, const char* string, const int len) {
     int i, j;
 
-    for (i = 0; i < len + 1; i++)
+    for (i = 0; i < len; i++)
         for (j = 0; j < PIXEL_UNIT; j++)
             buffer[line * 128 + x + i * PIXEL_UNIT + j] =
                 font[string[i] * PIXEL_UNIT + j];

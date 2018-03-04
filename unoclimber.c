@@ -7,7 +7,7 @@
 #include "includes/standard.h"
 
 #define MAX_AMMO 3
-#define MAX_ROCK 15
+#define MAX_ROCK 6
 #define MAX_HEALTH 3
 #define POINTS 5
 
@@ -38,7 +38,7 @@ char char_second_place[HS_LEN];
 char char_third_place[HS_LEN];
 
 int player_score, old_player_score;
-int shot_count;
+int shot_count, rock_count;
 int invincible, cooldown;
 int player_health;
 int ammo;
@@ -46,10 +46,10 @@ int ammo;
 /* Objects */
 Player p;
 Shot shot_array[MAX_AMMO];
-Rock r;
+Rock rock_array[MAX_ROCK];
 
 /* Initialize controls */
-void init() {
+void init(void) {
     init_input();
     init_pin();
     srand(seed());
@@ -84,10 +84,18 @@ void setup(void) {
 
     invincible = 1;
     cooldown = 1;
+
     player_score = 0;
     old_player_score = 0;
+
     difficulty = 0;
     shot_count = 0;
+    rock_count = 0;
+
+    set_led(6, SET);
+    set_led(7, SET);
+    set_led(8, SET);
+
     hs_is_updated = 0;
 
     int i;
@@ -102,6 +110,10 @@ void setup(void) {
     is_initialized = 1;
 }
 
+void user_isr(void) {
+
+}
+
 void player_input(Object* o) {
     potentio_move(o);
 
@@ -114,68 +126,66 @@ void player_input(Object* o) {
 void spawn_object(char c) {
     switch (c) {
         case 'r':
-            if (!r.is_alive)
-                r = rock_new();
+            rock_count %= (difficulty + 1);
+            if (!rock_array[rock_count].is_alive)
+                rock_array[rock_count] = rock_new();
+            rock_count++;
             break;
         case 's':
             shot_count %= MAX_AMMO;
-            if (shot_array[shot_count].is_alive != 1)
+            if (!shot_array[shot_count].is_alive)
                 shot_array[shot_count] = shot_new(p);
             shot_count++;
             break;
     }
 }
 
-void score_update() {
+void score_update(void) {
     to_char(player_score, char_player_score);
     print(104, 0, char_player_score, 3);
 }
 
-void increase_score() {
+void increase_score(void) {
     if (player_score + POINTS > HS_MAX)
         player_score = HS_MAX;
     else
         player_score += POINTS;
 }
 
-void increase_difficulty() {
+void increase_difficulty(void) {
     if (player_score > old_player_score)
-        if (player_score % 50 == 0 && difficulty <= 3) {
+        if (player_score % 50 == 0 && difficulty < 4) {
             difficulty++;
             old_player_score = player_score;
         }
 }
 
-void check_health() {
-    if (check_collision(p, r)) {
-        if (IFS(0) & 0x9000) {
-            invincible++;
-            IFSCLR(0) = 0x9000;
-        }
+void check_health(void) {
+    if (IFS(0) & 0x9000) {
+        invincible++;
+        IFSCLR(0) = 0x9000;
+    }
 
-        if (invincible > 1) {
-            invincible = 0;
-            player_health--;
-        }
-
-        r.is_alive = 0;
+    if (invincible > 1) {
+        invincible = 0;
+        player_health--;
     }
 
     if (player_health == 3) {
-        set_led(8, SET);
-        set_led(7, SET);
         set_led(6, SET);
-    } else if (player_health == 2) {
+        set_led(7, SET);
+        set_led(8, SET);
+    } else if (player_health == 2)
         set_led(6, CLR);
-    } else if (player_health == 1) {
+    else if (player_health == 1)
         set_led(7, CLR);
-    } else if (player_health <= 0) {
+    else if (player_health <= 0) {
         PORTE = 0;
         p.is_alive = 0;
     }
 }
 
-int check_ammo() {
+int check_ammo(void) {
     int count = 0;
 
     int i;
@@ -204,7 +214,7 @@ int check_ammo() {
     return count;
 }
 
-void shoot() {
+void shoot(void) {
     if (IFS(0) & 0x9000) {
         IFSCLR(0) = 0x9000;
         if (!cooldown) {
@@ -213,6 +223,51 @@ void shoot() {
         } else
             cooldown--;
     }
+}
+
+void detect_collision(void) {
+    int i, j;
+    for (i = 0; i < (difficulty + 1) % MAX_ROCK; i++) {
+        if (rock_array[i].is_alive) {
+            if (check_collision(p, rock_array[i]))
+                check_health();
+
+            for (j = 0; j < MAX_AMMO; j++)
+                if (shot_array[j].is_alive)
+                    if (check_collision(shot_array[j], rock_array[i])) {
+                        increase_score();
+                        rock_array[i].is_alive = 0;
+                        shot_array[j].is_alive = 0;
+                        draw(rock_array[i], CLR);
+                        draw(shot_array[j], CLR);
+                    }
+        }
+    }
+}
+
+void game_over(void) {
+    int i;
+
+    for (i = 0; i < (difficulty + 1) % MAX_ROCK; i++)
+        rock_array[i].is_alive = 0;
+
+    for (i = 0; i < MAX_AMMO; i++)
+        shot_array[i].is_alive = 0;
+
+    stop_timer(2);
+    current_screen = FINISH;
+}
+
+void update_objects(void) {
+    int i;
+
+    for (i = 0; i < MAX_AMMO; i++)
+        if (shot_array[i].is_alive)
+            object_update(&shot_array[i]);
+
+    for (i = 0; i < (difficulty + 1) % MAX_ROCK; i++)
+        if (rock_array[i].is_alive)
+            object_update(&rock_array[i]);
 }
 
 void logo_screen(void) {
@@ -251,34 +306,23 @@ void game_screen(void) {
         if (check_ammo() > 0 && get_btn(2))
             shoot();
 
-        increase_difficulty();
-        check_health();
-
         if (TMR2 % 5 == 0)
             spawn_object('r');
 
+        detect_collision();
+
         if (!p.is_alive) {
-            r.is_alive = 0;
-            stop_timer(2);
-            current_screen = 4;
+            game_over();
+            return;
         }
 
-        int i;
-        for (i = 0; i < MAX_AMMO; i++) {
-            if (shot_array[i].is_alive)
-                if (check_collision(shot_array[i], r)) {
-                    increase_score();
-                    shot_array[i].is_alive = 0;
-                    r.is_alive = 0;
-                }
-            object_update(&shot_array[i]);
-        }
-
-        object_update(&r);
-
-        draw_borders();
-        score_update();
+        increase_difficulty();
+        update_objects();
         player_input(&p);
+        score_update();
+        draw_borders();
+
+        current_screen = GAME;
     }
 }
 
@@ -316,7 +360,7 @@ void high_score_screen(void) {
         current_screen = MENU;
 }
 
-void finished_screen() {
+void finished_screen(void) {
     clear();
 
     if (!hs_is_updated) {
@@ -354,13 +398,14 @@ void finished_screen() {
     print(76, 1, char_player_score, 3);
     print(20, 3, "Press BTN4", 11);
 
+    delay(99999);
     if (get_btn(4)) {
         current_screen = MENU;
         is_initialized = 0;
     }
 }
 
-void draw_display() {
+void draw_display(void) {
     switch (current_screen) {
         case MENU:
             menu_screen();
@@ -377,8 +422,10 @@ void draw_display() {
         case FINISH:
             finished_screen();
             break;
-        default:
+        case LOGO:
             logo_screen();
+            break;
+        default:
             break;
     }
     render();
