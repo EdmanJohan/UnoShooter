@@ -111,6 +111,10 @@ void setup(void) {
     is_initialized = 1;
 }
 
+void user_isr(void) {
+
+}
+
 void player_input(Object* o) {
     potentio_move(o);
 
