@@ -41,8 +41,8 @@ Rock rock_new() {
     r.is_alive = 1;
     r.radius = 4;
 
-    if ((rand() & 100) > 0)
-        r.velY = (0.1 * difficulty + 1) * -randfloat(-0.5, 0.5);
+    if ((rand() & 100) > 50)
+        r.velY = (0.1 * (float)(difficulty) + 1) * -randfloat(-0.5, 0.5);
 
     const int r_shape[10][10] = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
