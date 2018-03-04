@@ -17,13 +17,14 @@
 static int counter = 0;
 
 /**
- * Simple delay function.
+ * Simple Delay
+ * This brilliant algorithm was invented by Fredrik Lundevall
  * @param del Number of cycles to "stall".
- * @author Alex Diaz
+ * @author Fredrik Lundevall
  */
 void delay(int del) {
-    int i;
-    for (i = 0; i < del; i++);
+        int i;
+        for (i = 0; i < del; i++);
 }
 
 /**
@@ -34,12 +35,12 @@ void delay(int del) {
  * @author  Alex Diaz
  */
 void set_pixel(int x, int y, int state) {
-    int i = y / PIXEL_UNIT;
+        int i = y / PIXEL_UNIT;
 
-    if (state)
-        buffer[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
-    else
-        buffer[i * HEIGHT + x] &= ~(1 << (y - i * PIXEL_UNIT));
+        if (state)
+                buffer[i * HEIGHT + x] |= 1 << (y - i * PIXEL_UNIT);
+        else
+                buffer[i * HEIGHT + x] &= ~(1 << (y - i * PIXEL_UNIT));
 }
 
 /**
@@ -47,28 +48,28 @@ void set_pixel(int x, int y, int state) {
  * Author: Alex Diaz, modified by Johan Edman
  */
 void init_timer(int t) {
-    switch (t) {
+        switch (t) {
         case 2:
-            T2CON = 0;    // STOP TIMER & CLEAR CONTROL REGISTERS
-            PR2 = 0x100;  // PERIOD INITALIZED TO 31250, 0x7A12
+                T2CON = 0; // STOP TIMER & CLEAR CONTROL REGISTERS
+                PR2 = 0x100; // PERIOD INITALIZED TO 31250, 0x7A12
 
-            IPCSET(2) = 0xD;    // SET INTERRUPT PRIORITY 3-1
-            IECSET(0) = 0x900;  // ENABLE INTERRUPTS
+                IPCSET(2) = 0xD; // SET INTERRUPT PRIORITY 3-1
+                IECSET(0) = 0x900; // ENABLE INTERRUPTS
 
-            T2CONSET = 0x70;  // 1:256 PRESCALE
-            TMR2 = 0;         // CLEAR TIMER REGISTER
-            break;
+                T2CONSET = 0x70; // 1:256 PRESCALE
+                TMR2 = 0;     // CLEAR TIMER REGISTER
+                break;
         case 3:
-            T3CON = 0;
-            PR3 = 312500;
+                T3CON = 0;
+                PR3 = 312500;
 
-            IPC(3) = 0x1B;       // IEC Bit 16
-            IECSET(0) = 0x1000;  //
+                IPC(3) = 0x1B;   // IEC Bit 16
+                IECSET(0) = 0x1000; //
 
-            T3CONSET = 0x70;
-            TMR3 = 0;
-            break;
-    }
+                T3CONSET = 0x70;
+                TMR3 = 0;
+                break;
+        }
 }
 
 /**
@@ -76,14 +77,14 @@ void init_timer(int t) {
  * Author: Alex Diaz, modified by Johan Edman
  */
 void start_timer(int t) {
-    switch (t) {
+        switch (t) {
         case 2:
-            T2CONSET = 0x8000;
-            break;
+                T2CONSET = 0x8000;
+                break;
         case 3:
-            T3CONSET = 0x8000;
-            break;
-    }
+                T3CONSET = 0x8000;
+                break;
+        }
 }
 
 /**
@@ -91,14 +92,14 @@ void start_timer(int t) {
  * Author: Alex Diaz, modified by Johan Edman
  */
 void stop_timer(int t) {
-    switch (t) {
+        switch (t) {
         case 2:
-            T2CONCLR = 0x8000;
-            break;
+                T2CONCLR = 0x8000;
+                break;
         case 3:
-            T3CONCLR = 0x8000;
-            break;
-    }
+                T3CONCLR = 0x8000;
+                break;
+        }
 }
 
 /**
@@ -107,18 +108,18 @@ void stop_timer(int t) {
  * @author Alex Diaz
  */
 int next_frame() {
-    if (counter > 10) {
-        counter = 0;
-        return 1;
-    }
+        if (counter > 10) {
+                counter = 0;
+                return 1;
+        }
 
-    if (IFS(0) & 0x100) {
-        counter++;
-        IFSCLR(0) = 0x100;  // CLEAR TIMER INTERRUPT STATUS FLAG
+        if (IFS(0) & 0x100) {
+                counter++;
+                IFSCLR(0) = 0x100; // CLEAR TIMER INTERRUPT STATUS FLAG
+                return 0;
+        }
+
         return 0;
-    }
-
-    return 0;
 }
 
 /**
@@ -129,12 +130,12 @@ int next_frame() {
  * @author          Fredrik Lundevall
  */
 byte spi_setbyte(byte data) {
-    while (!(SPI2STAT & 0x08))  // SPI2TXB
-        ;
-    SPI2BUF = data;
-    while (!(SPI2STAT & 0x01))  // SPI2RBF
-        ;
-    return SPI2BUF;
+        while (!(SPI2STAT & 0x08)) // SPI2TXB
+                ;
+        SPI2BUF = data;
+        while (!(SPI2STAT & 0x01)) // SPI2RBF
+                ;
+        return SPI2BUF;
 }
 
 /**
@@ -142,30 +143,30 @@ byte spi_setbyte(byte data) {
  * Author: Fredrik Lundevall
  */
 void init_spi() {
-    // SET PERIPHERAL BUS CLOCK
-    OSCCONCLR = 1 << 19;
-    OSCCONCLR = 1 << 20;
-    OSCCONSET = 1 << 19;
+        // SET PERIPHERAL BUS CLOCK
+        OSCCONCLR = 1 << 19;
+        OSCCONCLR = 1 << 20;
+        OSCCONSET = 1 << 19;
 
-    AD1PCFG = 0xFFFF;  // SET DIGITAL PIN
+        AD1PCFG = 0xFFFF; // SET DIGITAL PIN
 
-    // SET PINS FOR DISPLAY SIGNALS
-    PORTF = 0xFFFF;
-    ODCF = 0x0;         // SET NORMAL DIGITAL OUTPUT (ELSE OPEN DRAIN OUTPUT)
-    ODCG = 0x0;         // SET NORMAL DIGITAL OUTPUT (ELSE OPEN DRAIN OUTPUT)
-    TRISFCLR = 1 << 4;  // SET VDD TO OUTPUT
-    TRISFCLR = 1 << 5;  // SET VBAT TO OUTPUT
-    TRISFCLR = 1 << 6;  // SET DATA/CMD TO OUTPUT
-    TRISGCLR = 1 << 9;  // SET RESET TO OUTPUT
+        // SET PINS FOR DISPLAY SIGNALS
+        PORTF = 0xFFFF;
+        ODCF = 0x0;     // SET NORMAL DIGITAL OUTPUT (ELSE OPEN DRAIN OUTPUT)
+        ODCG = 0x0;     // SET NORMAL DIGITAL OUTPUT (ELSE OPEN DRAIN OUTPUT)
+        TRISFCLR = 1 << 4; // SET VDD TO OUTPUT
+        TRISFCLR = 1 << 5; // SET VBAT TO OUTPUT
+        TRISFCLR = 1 << 6; // SET DATA/CMD TO OUTPUT
+        TRISGCLR = 1 << 9; // SET RESET TO OUTPUT
 
-    // SET SPI CONTROLLER
-    SPI2CON = 0;           // CLEAR SPI CONTROLLER PORT 2
-    SPI2BRG = 1 << 2;      // BAUD RATE DIVISOR 64
-    SPI2STATCLR = 1 << 6;  // CLEAR SPIROV OVERFLOW FLAG
-    SPI2CONSET = 1 << 5;   // SET CKP CLOCK POLARITY,
-                           // STATE: ACTIVE LOW, IDLE HIGH
-    SPI2CONSET = 1 << 6;   // SET MSTEN BIT, 1 = MASTER, ELSE SLAVE
-    SPI2CONSET = 1 << 15;  // ENABLE SPI
+        // SET SPI CONTROLLER
+        SPI2CON = 0;       // CLEAR SPI CONTROLLER PORT 2
+        SPI2BRG = 1 << 2;  // BAUD RATE DIVISOR 64
+        SPI2STATCLR = 1 << 6; // CLEAR SPIROV OVERFLOW FLAG
+        SPI2CONSET = 1 << 5; // SET CKP CLOCK POLARITY,
+                             // STATE: ACTIVE LOW, IDLE HIGH
+        SPI2CONSET = 1 << 6; // SET MSTEN BIT, 1 = MASTER, ELSE SLAVE
+        SPI2CONSET = 1 << 15; // ENABLE SPI
 }
 
 /**
@@ -173,35 +174,35 @@ void init_spi() {
  * Author: Fredrik Lundevall
  */
 void init_display() {
-    init_spi();
+        init_spi();
 
-    PORTFCLR = 1 << 4;  // CLEAR DATA/CMD BIT
-    delay(100);
-    PORTFCLR = 1 << 6;  // TURN VDD ON
-    delay(1000000);     // WAIT
+        PORTFCLR = 1 << 4; // CLEAR DATA/CMD BIT
+        delay(100);
+        PORTFCLR = 1 << 6; // TURN VDD ON
+        delay(1000000); // WAIT
 
-    spi_setbyte(SET_DISPLAY_OFF);
+        spi_setbyte(SET_DISPLAY_OFF);
 
-    PORTGCLR = 1 << 9;
-    delay(10);
-    PORTGSET = 1 << 9;  // RESET THE RESET BIT
-    delay(10);
+        PORTGCLR = 1 << 9;
+        delay(10);
+        PORTGSET = 1 << 9; // RESET THE RESET BIT
+        delay(10);
 
-    spi_setbyte(SET_CHARGE_PUMP_1);
-    spi_setbyte(SET_CHARGE_PUMP_2);
+        spi_setbyte(SET_CHARGE_PUMP_1);
+        spi_setbyte(SET_CHARGE_PUMP_2);
 
-    spi_setbyte(SET_PRECHARGE_PERIOD_1);
-    spi_setbyte(SET_PRECHARGE_PERIOD_2);
+        spi_setbyte(SET_PRECHARGE_PERIOD_1);
+        spi_setbyte(SET_PRECHARGE_PERIOD_2);
 
-    PORTFCLR = 1 << 5;  // TURN VCC ON
-    delay(1000000);     // WAIT
+        PORTFCLR = 1 << 5; // TURN VCC ON
+        delay(1000000); // WAIT
 
-    // COMMANDS TO FLIP DISPLAY. SETS DISPLAY ORIGIN TO UPPER LEFT CORNER
-    spi_setbyte(SET_SEGMENT_REMAP);
-    spi_setbyte(SET_COM_OUTPUT_SCAN_DIR);
-    spi_setbyte(SET_COM_PINS_HW_CONFIG);
-    spi_setbyte(SET_VCC);
-    spi_setbyte(SET_DISPLAY_ON);
+        // COMMANDS TO FLIP DISPLAY. SETS DISPLAY ORIGIN TO UPPER LEFT CORNER
+        spi_setbyte(SET_SEGMENT_REMAP);
+        spi_setbyte(SET_COM_OUTPUT_SCAN_DIR);
+        spi_setbyte(SET_COM_PINS_HW_CONFIG);
+        spi_setbyte(SET_VCC);
+        spi_setbyte(SET_DISPLAY_ON);
 }
 
 /**
@@ -212,12 +213,12 @@ void init_display() {
  * @author Fredrik Lundevall, modified by Alex Diaz
  */
 void print(int x, int line, const char* string, const int len) {
-    int i, j;
+        int i, j;
 
-    for (i = 0; i < len; i++)
-        for (j = 0; j < PIXEL_UNIT; j++)
-            buffer[line * 128 + x + i * PIXEL_UNIT + j] =
-                font[string[i] * PIXEL_UNIT + j];
+        for (i = 0; i < len; i++)
+                for (j = 0; j < PIXEL_UNIT; j++)
+                        buffer[line * 128 + x + i * PIXEL_UNIT + j] =
+                                font[string[i] * PIXEL_UNIT + j];
 }
 
 /**
@@ -226,19 +227,19 @@ void print(int x, int line, const char* string, const int len) {
  * Author: Fredrik Lundevall, modified by Alex Diaz
  */
 void render() {
-    int i, j;
+        int i, j;
 
-    for (i = 0; i < PAGES; i++) {
-        PORTFCLR = 1 << 4;  // CLEAR CMD/DATA
+        for (i = 0; i < PAGES; i++) {
+                PORTFCLR = 1 << 4; // CLEAR CMD/DATA
 
-        spi_setbyte(0x22);  // SET PRE-CHARGE PERIOD
-        spi_setbyte(i);     // SET MEM ADDRESSING MODE.
-        spi_setbyte(0x10);  // SET HIGH COLUMN ADDRESS
+                spi_setbyte(0x22); // SET PRE-CHARGE PERIOD
+                spi_setbyte(i); // SET MEM ADDRESSING MODE.
+                spi_setbyte(0x10); // SET HIGH COLUMN ADDRESS
 
-        PORTFSET = 1 << 4;  // SET CMD/DATA
+                PORTFSET = 1 << 4; // SET CMD/DATA
 
-        for (j = 0; j < HEIGHT; j++) spi_setbyte(buffer[i * HEIGHT + j]);
-    }
+                for (j = 0; j < HEIGHT; j++) spi_setbyte(buffer[i * HEIGHT + j]);
+        }
 }
 
 /**
@@ -246,6 +247,6 @@ void render() {
  * Author: Alex Diaz
  */
 void clear() {
-    int i;
-    for (i = 0; i < TOTAL_PIXELS; i++) buffer[i] = 0;
+        int i;
+        for (i = 0; i < TOTAL_PIXELS; i++) buffer[i] = 0;
 }
