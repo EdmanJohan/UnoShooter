@@ -24,6 +24,9 @@ The project website, which can be found [here](https://team-eight.github.io/) is
 
 It gives a short description of the project and what it's about, some weekly updates & highlights of what we're doing.
 
+Are you a member?
+- Take a look at the [FAQ - Adding to the Website](http://sthlm-commuter.readthedocs.io/FAQ.html) section, to see how you can contribute and/or make changes. **Will be added shortly**
+
 
 ### Contributors
 The members of Team 8 are the following: <br>
